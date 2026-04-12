@@ -14,6 +14,7 @@ import { Reviews } from './components/Reviews';
 import { CTA } from './components/CTA';
 import { Footer } from './components/Footer';
 import { Modal } from './components/Modal';
+import { BottomNav } from './components/BottomNav';
 import { I18nProvider } from './I18nContext';
 import { Language, translations } from './i18n';
 import { useNavigate } from 'react-router-dom';
@@ -47,7 +48,7 @@ export default function App({ lang }: { lang: Language }) {
 
   return (
     <I18nProvider lang={lang}>
-      <div className="min-h-screen flex flex-col font-sans text-text bg-white">
+      <div className="min-h-screen flex flex-col font-sans text-text bg-white pb-24">
         <Navbar onOpenModal={() => setIsModalOpen(true)} />
         
         <main className="flex-grow">
@@ -62,6 +63,7 @@ export default function App({ lang }: { lang: Language }) {
 
         <Footer />
         
+        <BottomNav onOpenModal={() => setIsModalOpen(true)} />
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </div>
     </I18nProvider>

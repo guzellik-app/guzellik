@@ -2,7 +2,7 @@ export const translations = {
   en: {
     brand: {
       name: "Güzellik App",
-      nameHtml: "Güzellik <span className=\"text-blue\">App</span>",
+      nameHtml: "Güzellik <span class=\"text-blue\">App</span>",
       copyright: "© 2026 Güzellik App GmbH. All rights reserved."
     },
     nav: {
@@ -436,7 +436,7 @@ export const translations = {
   de: {
     brand: {
       name: "Güzellik App",
-      nameHtml: "Güzellik <span className=\"text-blue\">App</span>",
+      nameHtml: "Güzellik <span class=\"text-blue\">App</span>",
       copyright: "© 2026 Güzellik App GmbH. Alle Rechte vorbehalten."
     },
     nav: {
@@ -870,7 +870,7 @@ export const translations = {
   tr: {
     brand: {
       name: "Güzellik App",
-      nameHtml: "Güzellik <span className=\"text-blue\">App</span>",
+      nameHtml: "Güzellik <span class=\"text-blue\">App</span>",
       copyright: "© 2026 Güzellik App GmbH. Tüm hakları saklıdır."
     },
     nav: {

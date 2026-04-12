@@ -33,13 +33,14 @@ export function Modal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
       if (signInError) throw signInError;
 
       // Fetch user profile to get role
-      const { data: profileData, error: profileError } = await supabase
+      const { data: profileData } = await supabase
         .from('profiles')
         .select('role')
         .eq('id', data.user.id)
         .single();
 
-      const userRole = profileData?.role || 'patient';
+      // Priority: Profile Table > Auth Metadata > Default 'patient'
+      const userRole = profileData?.role || data.user.user_metadata?.role || 'patient';
       localStorage.setItem('userRole', userRole);
 
       onClose();
@@ -74,10 +75,20 @@ export function Modal({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
 
       if (signUpError) throw signUpError;
 
+      // Explicitly create/update profile to ensure role persistence
+      if (data.user) {
+        await supabase.from('profiles').upsert({
+          id: data.user.id,
+          role: role,
+          email: email,
+          full_name: email.split('@')[0]
+        });
+      }
+
       localStorage.setItem('userRole', role);
       onClose();
       const langPrefix = lang === 'en' ? '' : `/${lang}`;
-      navigate(`${langPrefix}/dashboard`, { state: { role } });
+      navigate(`${langPrefix}/dashboard/settings`, { state: { role } });
     } catch (err: any) {
       setError(err.message || 'Failed to sign up.');
     } finally {

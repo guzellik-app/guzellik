@@ -3,6 +3,7 @@ import { useParams, Navigate, Link, useNavigate } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { Modal } from './Modal';
+import { BottomNav } from './BottomNav';
 import { I18nProvider, useI18n } from '../I18nContext';
 import { Language } from '../i18n';
 import { MOCK_CLINICS } from '../data/clinics';
@@ -69,7 +70,7 @@ function ListingDetailContent() {
         
         if (servicesData) {
           const mappedServices = servicesData.map((s: any) => {
-            const clinicInfo = clinicMap.get(s.clinic_id) || {};
+            const clinicInfo = (clinicMap.get(s.clinic_id) || {}) as any;
             return {
             id: `service-${s.id}`,
             name: s.name,
@@ -164,7 +165,7 @@ function ListingDetailContent() {
     <div className="min-h-screen bg-off-white font-sans selection:bg-blue/20 selection:text-navy flex flex-col">
       <Navbar onOpenModal={() => setIsModalOpen(true)} />
       
-      <main className="flex-grow pt-[100px] pb-20">
+      <main className="flex-grow pt-[80px] pb-24">
         <div className="max-w-[1200px] mx-auto px-[5vw]">
           
           {/* Breadcrumbs */}
@@ -445,6 +446,7 @@ function ListingDetailContent() {
       </main>
 
       <Footer />
+      <BottomNav onOpenModal={() => setIsModalOpen(true)} />
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );

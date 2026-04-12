@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { Modal } from './Modal';
+import { BottomNav } from './BottomNav';
 import { I18nProvider, useI18n } from '../I18nContext';
 import { Language } from '../i18n';
 import { Search, MapPin, CreditCard, Heart, Star, Filter, ChevronDown } from 'lucide-react';
@@ -59,7 +60,7 @@ function SearchResultsContent() {
         
         if (servicesData) {
           const mappedServices = servicesData.map((s: any) => {
-            const clinicInfo = clinicMap.get(s.clinic_id) || {};
+            const clinicInfo = (clinicMap.get(s.clinic_id) || {}) as any;
             return {
             id: `service-${s.id}`,
             name: s.name,
@@ -218,9 +219,9 @@ function SearchResultsContent() {
     <div className="min-h-screen flex flex-col font-sans text-text bg-off-white">
       <Navbar onOpenModal={() => setIsModalOpen(true)} />
       
-      <main className="flex-grow pt-[72px]">
+      <main className="flex-grow pt-[60px] pb-24">
         {/* Sticky Search Box */}
-        <div className="sticky top-[72px] z-40 bg-white border-b border-gray-200 shadow-sm py-4 px-[5vw]">
+        <div className="sticky top-[60px] z-40 bg-white border-b border-gray-200 shadow-sm py-4 px-[5vw]">
           <div className="max-w-[1200px] mx-auto flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
@@ -478,6 +479,7 @@ function SearchResultsContent() {
       </main>
 
       <Footer />
+      <BottomNav onOpenModal={() => setIsModalOpen(true)} />
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );

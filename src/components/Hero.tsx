@@ -13,7 +13,7 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
   };
 
   return (
-    <section className="min-h-screen flex items-center px-[5vw] pt-[100px] pb-[60px] relative overflow-hidden bg-[radial-gradient(ellipse_80%_60%_at_70%_40%,rgba(200,222,255,0.45)_0%,transparent_70%),radial-gradient(ellipse_50%_40%_at_20%_80%,rgba(201,168,76,0.08)_0%,transparent_60%),var(--color-white)]">
+    <section className="min-h-screen flex items-center px-[5vw] pt-[80px] pb-[60px] relative overflow-hidden bg-[radial-gradient(ellipse_80%_60%_at_70%_40%,rgba(200,222,255,0.45)_0%,transparent_70%),radial-gradient(ellipse_50%_40%_at_20%_80%,rgba(201,168,76,0.08)_0%,transparent_60%),var(--color-white)]">
       {/* Background blobs */}
       <div className="absolute -top-[200px] -right-[200px] w-[700px] h-[700px] rounded-full bg-[radial-gradient(circle,rgba(200,222,255,0.5)_0%,transparent_70%)] pointer-events-none"></div>
       <div className="absolute -bottom-[100px] -left-[100px] w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle,rgba(201,168,76,0.07)_0%,transparent_70%)] pointer-events-none"></div>

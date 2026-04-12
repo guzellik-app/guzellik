@@ -3,6 +3,7 @@ import { useParams, Navigate, Link } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { Modal } from './Modal';
+import { BottomNav } from './BottomNav';
 import { I18nProvider, useI18n } from '../I18nContext';
 import { Language } from '../i18n';
 import { MOCK_CLINICS } from '../data/clinics';
@@ -122,9 +123,9 @@ function ClinicProfileContent() {
     <div className="min-h-screen bg-off-white font-sans selection:bg-blue/20 selection:text-navy flex flex-col">
       <Navbar onOpenModal={() => setIsModalOpen(true)} />
       
-      <main className="flex-grow pb-20">
+      <main className="flex-grow pb-24">
         {/* Cover Image */}
-        <div className="w-full h-[300px] md:h-[400px] relative pt-[100px]">
+        <div className="w-full h-[300px] md:h-[400px] relative pt-[80px]">
           <div className="absolute inset-0">
             <img 
               src={clinic.coverImage} 
@@ -308,6 +309,7 @@ function ClinicProfileContent() {
       </main>
 
       <Footer />
+      <BottomNav onOpenModal={() => setIsModalOpen(true)} />
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>
   );

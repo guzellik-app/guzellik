@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Routes, Route, Navigate, Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 import { Navbar } from './Navbar';
 import { Modal } from './Modal';
+import { BottomNav } from './BottomNav';
 import { 
   LayoutDashboard, 
   Users, 
@@ -1806,7 +1807,7 @@ function UserSettings() {
   );
 }
 
-function RequestRow({ req, role }: { req: any, role: Role }) {
+function RequestRow({ req, role }: { req: any, role: Role, key?: any }) {
   const { t } = useI18n();
   const [isExpanded, setIsExpanded] = useState(false);
   const [messages, setMessages] = useState<any[]>([]);
@@ -2290,17 +2291,36 @@ function DashboardLayoutContent() {
 
   const [role, setRole] = useState<Role>(actualRole as Role);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const navigate = useNavigate();
+  const { lang } = useI18n();
+  const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
-  // Ensure turkishmag.com@gmail.com is an admin in the database
+  // Consolidate auth checks to prevent concurrent Supabase calls
   React.useEffect(() => {
-    const ensureAdmin = async () => {
+    let isMounted = true;
+
+    const initAuth = async () => {
       try {
-        const { data: { user } } = await supabase.auth.getUser();
-        if (user && user.email === 'turkishmag.com@gmail.com') {
-          // Check if profile exists and is admin
+        // Use getSession first as it's faster and handles the initial lock
+        const { data: { session } } = await supabase.auth.getSession();
+        
+        if (!isMounted) return;
+
+        if (!session) {
+          setIsAuthenticated(false);
+          navigate(langPrefix + '/');
+          return;
+        }
+
+        setIsAuthenticated(true);
+        const user = session.user;
+
+        // Now ensure admin status if applicable
+        if (user && (user.email === 'turkishmag.com@gmail.com' || user.email === 'app.guzellik@gmail.com')) {
           const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
           
-          if (!profile || profile.role !== 'admin') {
+          if (isMounted && (!profile || profile.role !== 'admin')) {
             await supabase.from('profiles').upsert({ 
               id: user.id, 
               role: 'admin', 
@@ -2311,29 +2331,15 @@ function DashboardLayoutContent() {
           }
         }
       } catch (err) {
-        console.error('Error ensuring admin status:', err);
+        console.error('Error in auth initialization:', err);
+        if (isMounted) setIsAuthenticated(false);
       }
     };
-    ensureAdmin();
-  }, []);
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const navigate = useNavigate();
-  const { lang } = useI18n();
-  const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
-  React.useEffect(() => {
-    const checkAuth = async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        setIsAuthenticated(false);
-        navigate(langPrefix + '/');
-      } else {
-        setIsAuthenticated(true);
-      }
-    };
-    checkAuth();
+    initAuth();
 
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      if (!isMounted) return;
       if (!session) {
         setIsAuthenticated(false);
         navigate(langPrefix + '/');
@@ -2342,7 +2348,10 @@ function DashboardLayoutContent() {
       }
     });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      isMounted = false;
+      subscription.unsubscribe();
+    };
   }, [navigate, langPrefix]);
 
   if (isAuthenticated === null) {
@@ -2357,11 +2366,11 @@ function DashboardLayoutContent() {
     <TooltipProvider>
       <SidebarProvider>
         <Navbar onOpenModal={() => setIsModalOpen(true)} />
-        <div className="flex min-h-screen w-full bg-gray-50/50 pt-[72px]">
+        <div className="flex min-h-screen w-full bg-gray-50/50 pt-[60px]">
           <DashboardSidebar currentRole={role} onRoleChange={setRole} actualRole={actualRole} />
           <div className="flex-1 flex flex-col min-w-0">
             <DashboardHeader currentRole={role} />
-            <main className="flex-1 p-6 overflow-auto">
+            <main className="flex-1 p-6 overflow-auto pb-24">
               <div className="max-w-6xl mx-auto">
                 <Routes>
                   <Route path="/" element={
@@ -2394,6 +2403,7 @@ function DashboardLayoutContent() {
             </main>
           </div>
         </div>
+        <BottomNav onOpenModal={() => setIsModalOpen(true)} />
         <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
       </SidebarProvider>
     </TooltipProvider>

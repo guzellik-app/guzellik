@@ -30,7 +30,7 @@ export function Clinics({ onOpenModal }: { onOpenModal: () => void }) {
         
         if (servicesData) {
           const mappedServices = servicesData.map((s: any) => {
-            const clinicInfo = clinicMap.get(s.clinic_id) || {};
+            const clinicInfo = (clinicMap.get(s.clinic_id) || {}) as any;
             return {
             id: `service-${s.id}`,
             name: s.name,
