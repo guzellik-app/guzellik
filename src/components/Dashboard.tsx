@@ -92,8 +92,8 @@ function DashboardSidebar({ currentRole, onRoleChange, actualRole }: { currentRo
     <Sidebar className="top-[72px] h-[calc(100svh-72px)]">
       <SidebarHeader className="h-16 flex items-center px-4 border-b">
         <Link to={`${langPrefix}/`} className="flex items-center gap-2 font-bold text-xl text-navy">
-          <div className="w-8 h-8 bg-blue rounded-lg flex items-center justify-center text-white font-serif">
-            M
+          <div className="w-8 h-8 bg-blue rounded-lg flex items-center justify-center text-white font-sans border border-blue-dark/20 shadow-sm">
+            G
           </div>
           {t.dashboard.myDashboard}
         </Link>
