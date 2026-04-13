@@ -1,5 +1,5 @@
 {
   "name": "Güzellik App",
   "description": "An internationalized medical tourism platform supporting English, and Turkish.",
-  "requestFramePermissions": []
+  "requestFramePermissions": ["geolocation"]
 }

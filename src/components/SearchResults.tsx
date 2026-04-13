@@ -6,7 +6,7 @@ import { Modal } from './Modal';
 import { BottomNav } from './BottomNav';
 import { I18nProvider, useI18n } from '../I18nContext';
 import { Language } from '../i18n';
-import { Search, MapPin, CreditCard, Heart, Star, Filter, ChevronDown } from 'lucide-react';
+import { Search, MapPin, CreditCard, Heart, Star, Filter, ChevronDown, X } from 'lucide-react';
 import { MOCK_CLINICS } from '../data/clinics';
 
 const MOCK_CLINICS_REMOVED = true;
@@ -19,6 +19,8 @@ function SearchResultsContent() {
   const [searchProcedure, setSearchProcedure] = useState('');
   const [searchLocation, setSearchLocation] = useState('');
   const [searchBudget, setSearchBudget] = useState('');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
   React.useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -26,7 +28,19 @@ function SearchResultsContent() {
     const location = params.get('location');
     const budget = params.get('budget');
     if (procedure) setSearchProcedure(procedure);
-    if (location) setSearchLocation(location);
+    if (location) {
+      setSearchLocation(location);
+    } else {
+      // Try to detect location if not provided in URL
+      fetch('https://ipapi.co/json/')
+        .then(res => res.json())
+        .then(data => {
+          if (data.city) {
+            setSearchLocation(data.city);
+          }
+        })
+        .catch(err => console.error('Error detecting location:', err));
+    }
     if (budget) setSearchBudget(budget);
   }, []);
 
@@ -153,6 +167,7 @@ function SearchResultsContent() {
 
   const filteredClinics = useMemo(() => {
     return allClinics.filter(c => {
+      if (searchQuery && !c.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       if (searchProcedure && !c.procedures.includes(searchProcedure)) return false;
       if (searchLocation && !c.city.toLowerCase().includes(searchLocation.toLowerCase()) && !c.countryKey.toLowerCase().includes(searchLocation.toLowerCase())) return false;
       if (searchBudget) {
@@ -188,7 +203,7 @@ function SearchResultsContent() {
   // Reset to page 1 when filters change
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [searchProcedure, searchLocation, searchBudget, filterRatings, filterServices, filterTypes, sortBy]);
+  }, [searchQuery, searchProcedure, searchLocation, searchBudget, filterRatings, filterServices, filterTypes, sortBy]);
 
   // Calculate paginated clinics
   const totalPages = Math.ceil(filteredClinics.length / itemsPerPage);
@@ -222,68 +237,115 @@ function SearchResultsContent() {
       <main className="flex-grow pt-[60px] pb-24">
         {/* Sticky Search Box */}
         <div className="sticky top-[60px] z-40 bg-white border-b border-gray-200 shadow-sm py-4 px-[5vw]">
-          <div className="max-w-[1200px] mx-auto flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
-              <select 
-                value={searchProcedure} 
-                onChange={e => setSearchProcedure(e.target.value)}
-                className="w-full py-2.5 pr-3.5 pl-9 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all appearance-none focus:border-blue focus:bg-white"
-              >
-                <option value="">{t.hero.procedurePlaceholder}</option>
-                <option value="rhinoplasty">{t.hero.procedures.rhinoplasty}</option>
-                <option value="breastAugmentation">{t.hero.procedures.breastAugmentation}</option>
-                <option value="hairTransplant">{t.hero.procedures.hairTransplant}</option>
-                <option value="facelift">{t.hero.procedures.facelift}</option>
-                <option value="liposuction">{t.hero.procedures.liposuction}</option>
-                <option value="dentalAesthetics">{t.hero.procedures.dentalAesthetics}</option>
-                <option value="eyelidSurgery">{t.hero.procedures.eyelidSurgery}</option>
-              </select>
+          <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row gap-8">
+            <div className="hidden md:block w-[280px] shrink-0" />
+            <div className="flex-1">
+              <div className="relative w-full">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
+                <input 
+                  type="text"
+                  value={searchQuery}
+                  onChange={e => setSearchQuery(e.target.value)}
+                  placeholder={t.hero.searchPlaceholder || "Search clinics or services..."}
+                  className="w-full py-2.5 pr-3.5 pl-10 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:bg-white"
+                />
+              </div>
             </div>
-            <div className="relative flex-1">
-              <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
-              <select 
-                value={searchLocation}
-                onChange={e => setSearchLocation(e.target.value)}
-                className="w-full py-2.5 pr-3.5 pl-9 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all appearance-none focus:border-blue focus:bg-white"
-              >
-                <option value="">{t.hero.locationPlaceholder}</option>
-                <option value="turkey">{t.hero.locations.turkey}</option>
-                <option value="spain">{t.hero.locations.spain}</option>
-                <option value="germany">{t.hero.locations.germany}</option>
-                <option value="thailand">{t.hero.locations.thailand}</option>
-                <option value="switzerland">{t.hero.locations.switzerland}</option>
-                <option value="austria">{t.hero.locations.austria}</option>
-              </select>
-              <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
-            </div>
-            <div className="relative flex-1">
-              <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
-              <select 
-                value={searchBudget}
-                onChange={e => setSearchBudget(e.target.value)}
-                className="w-full py-2.5 pr-3.5 pl-9 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all appearance-none focus:border-blue focus:bg-white"
-              >
-                <option value="">{t.hero.budgetPlaceholder}</option>
-                <option value="b1">{t.hero.budgets.b1}</option>
-                <option value="b2">{t.hero.budgets.b2}</option>
-                <option value="b3">{t.hero.budgets.b3}</option>
-                <option value="b4">{t.hero.budgets.b4}</option>
-              </select>
-            </div>
-            <button className="py-2.5 px-6 bg-gradient-to-br from-blue to-blue-dark text-white border-none rounded-md font-sans text-[0.95rem] font-semibold cursor-pointer tracking-wide shadow-md transition-all hover:-translate-y-[1px] hover:shadow-lg">
-              {t.hero.searchBtn}
-            </button>
           </div>
         </div>
 
         <div className="max-w-[1200px] mx-auto px-[5vw] py-8 flex flex-col md:flex-row gap-8">
-          {/* Filters Sidebar */}
-          <aside className="w-full md:w-[280px] shrink-0">
-            <div className="sticky top-[160px] bg-white border border-gray-200 rounded-xl p-5 shadow-sm max-h-[calc(100vh-180px)] overflow-y-auto">
-              <div className="flex items-center gap-2 font-semibold text-navy mb-4 pb-3 border-b border-gray-100">
-                <Filter className="w-4 h-4 text-blue" />
-                {t.searchResults.filters}
+          {/* Mobile Filter Drawer Backdrop */}
+          {isFilterDrawerOpen && (
+            <div 
+              className="fixed inset-0 bg-black/50 z-[45] md:hidden"
+              onClick={() => setIsFilterDrawerOpen(false)}
+            />
+          )}
+
+          {/* Filters Sidebar / Drawer */}
+          <aside className={`
+            fixed inset-y-0 left-0 z-[46] w-[280px] bg-white transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:z-auto md:bg-transparent
+            ${isFilterDrawerOpen ? 'translate-x-0' : '-translate-x-full'}
+            md:block shrink-0
+          `}
+          style={{ 
+            top: isFilterDrawerOpen ? '0' : 'auto',
+            bottom: isFilterDrawerOpen ? '0' : 'auto',
+            height: isFilterDrawerOpen ? '100vh' : 'auto',
+            paddingTop: isFilterDrawerOpen ? '60px' : '0',
+            paddingBottom: isFilterDrawerOpen ? '100px' : '0'
+          }}>
+            <div className="h-full bg-white border-r border-gray-200 md:border md:rounded-xl p-5 shadow-sm overflow-y-auto">
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
+                <div className="flex items-center gap-2 font-semibold text-navy">
+                  <Filter className="w-4 h-4 text-blue" />
+                  {t.searchResults.filters}
+                </div>
+                <button 
+                  className="md:hidden text-gray-400 hover:text-navy"
+                  onClick={() => setIsFilterDrawerOpen(false)}
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
+
+              {/* Location Search Filter */}
+              <div className="mb-6">
+                <h4 className="text-[0.85rem] font-semibold text-gray-800 mb-3">Location</h4>
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
+                  <input 
+                    type="text"
+                    value={searchLocation}
+                    onChange={e => setSearchLocation(e.target.value)}
+                    placeholder="Search city or country..."
+                    className="w-full py-2 pr-3 pl-8 border border-gray-200 rounded-md font-sans text-[0.82rem] text-text bg-off-white outline-none focus:border-blue focus:bg-white"
+                  />
+                </div>
+              </div>
+
+              {/* Category Filter */}
+              <div className="mb-6">
+                <h4 className="text-[0.85rem] font-semibold text-gray-800 mb-3">Category</h4>
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
+                  <select 
+                    value={searchProcedure} 
+                    onChange={e => setSearchProcedure(e.target.value)}
+                    className="w-full py-2 pr-3 pl-8 border border-gray-200 rounded-md font-sans text-[0.82rem] text-text bg-off-white outline-none appearance-none focus:border-blue focus:bg-white"
+                  >
+                    <option value="">All Categories</option>
+                    <option value="rhinoplasty">{t.hero.procedures.rhinoplasty}</option>
+                    <option value="breastAugmentation">{t.hero.procedures.breastAugmentation}</option>
+                    <option value="hairTransplant">{t.hero.procedures.hairTransplant}</option>
+                    <option value="facelift">{t.hero.procedures.facelift}</option>
+                    <option value="liposuction">{t.hero.procedures.liposuction}</option>
+                    <option value="dentalAesthetics">{t.hero.procedures.dentalAesthetics}</option>
+                    <option value="eyelidSurgery">{t.hero.procedures.eyelidSurgery}</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Budget Filter */}
+              <div className="mb-6">
+                <h4 className="text-[0.85rem] font-semibold text-gray-800 mb-3">Budget</h4>
+                <div className="relative">
+                  <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
+                  <select 
+                    value={searchBudget}
+                    onChange={e => setSearchBudget(e.target.value)}
+                    className="w-full py-2 pr-3 pl-8 border border-gray-200 rounded-md font-sans text-[0.82rem] text-text bg-off-white outline-none appearance-none focus:border-blue focus:bg-white"
+                  >
+                    <option value="">Any Budget</option>
+                    <option value="b1">{t.hero.budgets.b1}</option>
+                    <option value="b2">{t.hero.budgets.b2}</option>
+                    <option value="b3">{t.hero.budgets.b3}</option>
+                    <option value="b4">{t.hero.budgets.b4}</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
+                </div>
               </div>
               
               <div className="mb-6">
@@ -347,20 +409,29 @@ function SearchResultsContent() {
           {/* Results List */}
           <div className="flex-1">
             <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-serif font-semibold text-navy">
+              <h2 className="text-xl font-serif font-semibold text-navy hidden sm:block">
                 {filteredClinics.length} {t.searchResults.clinicsFound}
               </h2>
-              <select 
-                value={sortBy}
-                onChange={e => setSortBy(e.target.value)}
-                className="py-1.5 px-3 border border-gray-200 rounded-md text-[0.85rem] text-gray-600 bg-white outline-none"
-              >
-                <option value="latest">{t.searchResults.latest}</option>
-                <option value="recommended">{t.searchResults.recommended}</option>
-                <option value="price-low">{t.searchResults.priceLowToHigh}</option>
-                <option value="price-high">{t.searchResults.priceHighToLow}</option>
-                <option value="rating">{t.searchResults.highestRated}</option>
-              </select>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <select 
+                  value={sortBy}
+                  onChange={e => setSortBy(e.target.value)}
+                  className="flex-1 sm:flex-none py-2 px-3 border border-gray-200 rounded-md text-[0.85rem] text-gray-600 bg-white outline-none shadow-sm"
+                >
+                  <option value="latest">{t.searchResults.latest}</option>
+                  <option value="recommended">{t.searchResults.recommended}</option>
+                  <option value="price-low">{t.searchResults.priceLowToHigh}</option>
+                  <option value="price-high">{t.searchResults.priceHighToLow}</option>
+                  <option value="rating">{t.searchResults.highestRated}</option>
+                </select>
+                <button 
+                  onClick={() => setIsFilterDrawerOpen(true)}
+                  className="md:hidden flex-1 flex items-center justify-center gap-2 py-2 px-4 bg-white border border-gray-200 rounded-md text-[0.85rem] font-medium text-navy shadow-sm"
+                >
+                  <Filter className="w-4 h-4 text-blue" />
+                  Filters
+                </button>
+              </div>
             </div>
 
             <div className="flex flex-col gap-6">
