@@ -143,20 +143,20 @@ export function Clinics({ onOpenModal }: { onOpenModal: () => void }) {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {displayClinics.map((clinic, index) => (
             <div 
               key={clinic.id}
-              className="bg-white rounded-2xl overflow-hidden border border-gray-200 transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg reveal relative group"
+              className="bg-white rounded-2xl overflow-hidden border border-black transition-all duration-300 hover:-translate-y-1.5 hover:shadow-lg reveal relative group flex flex-row h-[3.6cm] md:h-[5cm] lg:h-[5.8cm]"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <Link 
                 to={`/${lang === 'en' ? '' : lang + '/'}chatmt/${clinic.slug}`}
                 className="absolute inset-0 z-0"
               />
-              <div className="w-full h-[200px] relative">
+              <div className="w-[110px] md:w-[160px] lg:w-[220px] h-full relative shrink-0">
                 <img src={clinic.image} alt={clinic.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                <div className={`absolute top-3.5 left-3.5 text-white text-[0.68rem] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-full ${clinic.badge === 'premium' ? 'bg-gradient-to-br from-gold to-[#a8842c]' : clinic.badge === 'topRated' ? 'bg-navy' : 'bg-blue'}`}>
+                <div className={`absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5 text-white text-[0.55rem] sm:text-[0.65rem] font-semibold tracking-wider uppercase px-1.5 sm:px-2 py-0.5 rounded-full ${clinic.badge === 'premium' ? 'bg-gradient-to-br from-gold to-[#a8842c]' : clinic.badge === 'topRated' ? 'bg-navy' : 'bg-blue'}`}>
                   {t.clinics[clinic.badge as keyof typeof t.clinics] || clinic.type}
                 </div>
                 <button 
@@ -164,43 +164,32 @@ export function Clinics({ onOpenModal }: { onOpenModal: () => void }) {
                     e.preventDefault();
                     e.stopPropagation();
                   }}
-                  className="absolute top-3.5 right-3.5 w-8 h-8 rounded-full bg-white border-none cursor-pointer flex items-center justify-center shadow-sm transition-transform hover:scale-110 text-gray-400 hover:text-red-500 z-10 relative"
+                  className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white border-none cursor-pointer flex items-center justify-center shadow-sm transition-transform hover:scale-110 text-gray-400 hover:text-red-500 z-10 relative"
                 >
-                  <Heart className="w-4 h-4" />
+                  <Heart className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
                 </button>
               </div>
-              <div className="p-5 flex flex-col h-[calc(100%-200px)] relative z-10 pointer-events-none">
-                <div className="text-[0.75rem] text-gray-400 font-medium mb-1.5 flex items-center gap-1">
-                  <MapPin className="w-3 h-3" /> {clinic.city}, {t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}
-                </div>
-                <div className="text-[1.05rem] font-semibold text-navy mb-2">{clinic.name}</div>
-                <div className="flex items-center gap-1.5 mb-3.5">
-                  <div className="flex text-gold">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`w-3.5 h-3.5 ${i < Math.floor(clinic.rating) ? 'fill-gold' : 'fill-gray-200 text-gray-200'}`} />
-                    ))}
+              <div className="p-3 md:p-5 lg:p-6 flex-1 flex flex-col justify-between relative z-10 pointer-events-none">
+                <div>
+                  <div className="text-[1rem] md:text-[1.2rem] lg:text-[1.35rem] font-semibold text-navy mb-1 md:mb-2 line-clamp-1">{clinic.name}</div>
+                  <div className="flex items-center gap-1.5 md:gap-2">
+                    <div className="flex text-gold">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className={`w-3 h-3 md:w-4 md:h-4 ${i < Math.floor(clinic.rating) ? 'fill-gold' : 'fill-gray-200 text-gray-200'}`} />
+                      ))}
+                    </div>
+                    <div className="text-[0.8rem] md:text-[0.9rem] font-semibold text-gray-800">{clinic.rating.toFixed(1)}</div>
+                    <div className="text-[0.75rem] md:text-[0.85rem] text-gray-400">({clinic.reviews.toLocaleString()})</div>
                   </div>
-                  <div className="text-[0.82rem] font-semibold text-gray-800">{clinic.rating.toFixed(1)}</div>
-                  <div className="text-[0.78rem] text-gray-400">({clinic.reviews.toLocaleString()} {t.clinics.reviews})</div>
                 </div>
-                <div className="flex flex-wrap gap-1.5 mb-4">
-                  {clinic.procedures.slice(0, 3).map(proc => (
-                    <span key={proc} className="text-[0.72rem] font-medium text-blue bg-light-blue rounded-full px-2.5 py-1">
-                      {t.hero.procedures[proc as keyof typeof t.hero.procedures]}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto pointer-events-auto">
-                  <div>
-                    <span className="text-[0.7rem] text-gray-400 block">{t.clinics.from}</span>
-                    <span className="text-[1.1rem] font-bold text-navy">{clinic.price.toLocaleString()} €</span>
+                <div className="flex items-center justify-between pt-2 md:pt-4 border-t border-gray-100 mt-2 pointer-events-auto">
+                  <div className="text-[0.7rem] md:text-[0.85rem] text-gray-400 font-medium flex items-center gap-1 sm:gap-1.5">
+                    <MapPin className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" /> 
+                    <span className="line-clamp-1">{clinic.city}, {t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}</span>
                   </div>
-                  <Link 
-                    to={`/${lang === 'en' ? '' : lang + '/'}mt/${clinic.clinicSlug || clinic.slug}`}
-                    className="font-sans text-[0.82rem] font-semibold text-blue bg-light-blue border-none rounded-full px-4 py-2 cursor-pointer transition-colors hover:bg-blue hover:text-white relative z-10"
-                  >
-                    {t.clinics.viewProfile}
-                  </Link>
+                  <div className="text-right shrink-0">
+                    <span className="text-[1rem] md:text-[1.2rem] lg:text-[1.4rem] font-bold text-navy">{clinic.price.toLocaleString()} €</span>
+                  </div>
                 </div>
               </div>
             </div>
