@@ -95,6 +95,9 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
             {t.hero.subtitle}
           </p>
 
+          <h2 className="text-blue font-semibold text-[1.1rem] animate-fade-up mb-1" style={{ animationDelay: '0.45s' }}>
+            Güzellik App
+          </h2>
           <h2 className="animate-fade-up mb-10" style={{ animationDelay: '0.5s' }}>
             <a 
               href="https://www.google.com/search?q=CEO+Max+Turner" 
