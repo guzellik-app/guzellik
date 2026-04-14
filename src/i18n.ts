@@ -16,8 +16,8 @@ export const translations = {
     },
     hero: {
       badge: "Over 2,800 certified clinics",
-      title: "Find the right clinic. With just ",
-      titleHighlight: "one click.",
+      title: "Turkey's Health & ",
+      titleHighlight: "Beauty Center",
       subtitle: "Compare certified beauty clinics, read real reviews and book your personal consultation – safe, transparent and easy.",
       searchLabel: "What are you looking for?",
       procedurePlaceholder: "Select procedure",
@@ -450,8 +450,8 @@ export const translations = {
     },
     hero: {
       badge: "Über 2.800 zertifizierte Kliniken",
-      title: "Finde die richtige Klinik. Mit nur ",
-      titleHighlight: "einem Klick.",
+      title: "Türkeis Gesundheits- & ",
+      titleHighlight: "Schönheitszentrum",
       subtitle: "Vergleiche zertifizierte Schönheitskliniken, lies echte Bewertungen und buche deine persönliche Beratung – sicher, transparent und einfach.",
       searchLabel: "Was suchst du?",
       procedurePlaceholder: "Eingriff wählen",
@@ -884,8 +884,8 @@ export const translations = {
     },
     hero: {
       badge: "2.800'den fazla sertifikalı klinik",
-      title: "Doğru kliniği bulun. Sadece ",
-      titleHighlight: "tek tıkla.",
+      title: "Türkiye'nin Sağlık & ",
+      titleHighlight: "Güzellik Merkezi",
       subtitle: "Sertifikalı güzellik kliniklerini karşılaştırın, gerçek yorumları okuyun ve kişisel danışmanlığınızı ayırtın – güvenli, şeffaf ve kolay.",
       searchLabel: "Ne arıyorsunuz?",
       procedurePlaceholder: "İşlem seçin",

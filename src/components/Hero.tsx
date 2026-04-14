@@ -27,11 +27,7 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
           <h1 className="font-serif text-[clamp(2.4rem,4vw,3.8rem)] font-medium leading-[1.15] text-navy mb-5 animate-fade-up" style={{ animationDelay: '0.1s' }}>
             {t.hero.title}<em className="italic text-blue">{t.hero.titleHighlight}</em>
           </h1>
-          <p className="text-[1.05rem] text-gray-600 leading-[1.7] mb-10 max-w-[480px] animate-fade-up" style={{ animationDelay: '0.2s' }}>
-            {t.hero.subtitle}
-          </p>
-
-          <div className="bg-white border border-gray-200 rounded-2xl p-7 shadow-lg animate-fade-up" style={{ animationDelay: '0.3s' }}>
+          <div className="bg-white border border-gray-200 rounded-2xl p-7 shadow-lg animate-fade-up mb-8" style={{ animationDelay: '0.3s' }}>
             <div className="text-[0.72rem] font-semibold text-gray-400 tracking-wider uppercase mb-2">{t.hero.searchLabel}</div>
             <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_2fr] gap-3 mb-4">
               <div className="relative">
@@ -95,7 +91,22 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
             </button>
           </div>
 
-          <div className="flex flex-wrap sm:flex-nowrap gap-5 sm:gap-8 mt-9 animate-fade-up" style={{ animationDelay: '0.4s' }}>
+          <p className="text-[1.05rem] text-gray-600 leading-[1.7] mb-4 max-w-[480px] animate-fade-up" style={{ animationDelay: '0.4s' }}>
+            {t.hero.subtitle}
+          </p>
+
+          <h2 className="animate-fade-up mb-10" style={{ animationDelay: '0.5s' }}>
+            <a 
+              href="https://www.google.com/search?q=CEO+Max+Turner" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-[0.9rem] font-semibold text-navy hover:text-blue transition-colors flex items-center gap-2"
+            >
+              Founder & CEO Max Turner
+            </a>
+          </h2>
+
+          <div className="flex flex-wrap sm:flex-nowrap gap-5 sm:gap-8 mt-9 animate-fade-up" style={{ animationDelay: '0.6s' }}>
             <div>
               <div className="font-serif text-3xl font-semibold text-navy leading-none">2.8<span className="text-blue">K+</span></div>
               <div className="text-[0.78rem] text-gray-400 font-medium mt-1">{t.hero.stats.clinics}</div>
