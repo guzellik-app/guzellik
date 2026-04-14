@@ -168,42 +168,6 @@ function ListingDetailContent() {
       <main className="flex-grow pt-[80px] pb-24">
         <div className="max-w-[1200px] mx-auto px-[5vw]">
           
-          {/* Breadcrumbs */}
-          <div className="flex items-center gap-2 text-[0.8rem] text-gray-500 mb-6">
-            <Link to={`/${lang === 'en' ? '' : lang + '/'}chatmt`} className="hover:text-blue transition-colors">
-              {t.listingDetail.search}
-            </Link>
-            <ChevronRight className="w-3 h-3" />
-            <span className="text-navy font-medium">{clinic.name}</span>
-          </div>
-
-          {/* Header Section */}
-          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-8">
-            <div>
-              <div className="flex items-center gap-3 mb-3">
-                <span className="bg-blue/10 text-blue text-[0.7rem] font-bold tracking-wider uppercase px-3 py-1 rounded-full">
-                  {clinic.type}
-                </span>
-                <div className="flex items-center gap-1 text-gold bg-gold/10 px-2 py-1 rounded-full text-[0.75rem] font-semibold">
-                  <Star className="w-3.5 h-3.5 fill-gold" />
-                  {clinic.rating} ({clinic.reviews} {t.listingDetail.reviews})
-                </div>
-              </div>
-              <h1 className="font-serif text-4xl md:text-5xl font-medium text-navy mb-3">
-                {clinic.name}
-              </h1>
-              <div className="flex items-center gap-2 text-gray-500 text-[0.9rem]">
-                <MapPin className="w-4 h-4" />
-                {clinic.city}, {t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}
-              </div>
-            </div>
-            
-            <div className="flex flex-col items-start md:items-end">
-              <div className="text-[0.8rem] text-gray-500 mb-1">{t.listingDetail.startingFrom}</div>
-              <div className="text-3xl font-bold text-navy mb-4">€{clinic.price.toLocaleString()}</div>
-            </div>
-          </div>
-
           {/* Image Gallery */}
           <div className="mb-12">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[400px] md:h-[500px]">
@@ -235,6 +199,49 @@ function ListingDetailContent() {
                   </button>
                 ))}
               </div>
+            </div>
+          </div>
+
+          {/* Info Bar (Breadcrumbs, Location, Type, Reviews) */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.85rem] text-gray-500 mb-6">
+            <div className="flex items-center gap-2">
+              <Link to={`/${lang === 'en' ? '' : lang + '/'}chatmt`} className="hover:text-blue transition-colors">
+                {t.listingDetail.search}
+              </Link>
+              <ChevronRight className="w-3 h-3" />
+              <span className="text-navy font-medium">{clinic.name}</span>
+            </div>
+            
+            <div className="w-px h-3 bg-gray-300 hidden sm:block"></div>
+
+            <div className="flex items-center gap-1.5">
+              <MapPin className="w-3.5 h-3.5 text-blue" />
+              <span>{clinic.city}, {t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}</span>
+            </div>
+
+            <div className="w-px h-3 bg-gray-300 hidden sm:block"></div>
+
+            <span className="bg-blue/10 text-blue text-[0.7rem] font-bold tracking-wider uppercase px-2 py-0.5 rounded-md">
+              {clinic.type}
+            </span>
+
+            <div className="w-px h-3 bg-gray-300 hidden sm:block"></div>
+
+            <div className="flex items-center gap-1 text-gold font-semibold">
+              <Star className="w-3.5 h-3.5 fill-gold" />
+              {clinic.rating} ({clinic.reviews} {t.listingDetail.reviews})
+            </div>
+          </div>
+
+          {/* Title and Price Section */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
+            <h1 className="font-serif text-4xl md:text-5xl font-medium text-navy">
+              {clinic.name}
+            </h1>
+            
+            <div className="flex flex-col items-start md:items-end">
+              <div className="text-[0.8rem] text-gray-500 mb-1">{t.listingDetail.startingFrom}</div>
+              <div className="text-3xl font-bold text-navy">€{clinic.price.toLocaleString()}</div>
             </div>
           </div>
 

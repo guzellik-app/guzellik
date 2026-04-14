@@ -24,7 +24,7 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
             <div className="w-1.5 h-1.5 rounded-full bg-blue animate-pulse-custom"></div>
             {t.hero.badge}
           </div>
-          <h1 className="font-serif text-[clamp(2.4rem,4vw,3.8rem)] font-medium leading-[1.15] text-navy mb-5 animate-fade-up" style={{ animationDelay: '0.1s' }}>
+          <h1 className="font-nunito text-[clamp(2.4rem,4vw,3.8rem)] font-bold tracking-tight leading-[1] text-navy mb-5 animate-fade-up" style={{ animationDelay: '0.1s' }}>
             {t.hero.title}<em className="italic text-blue">{t.hero.titleHighlight}</em>
           </h1>
           <div className="bg-white border border-gray-200 rounded-2xl p-7 shadow-lg animate-fade-up mb-8" style={{ animationDelay: '0.3s' }}>
