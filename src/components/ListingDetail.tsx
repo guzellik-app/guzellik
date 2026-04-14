@@ -279,13 +279,34 @@ function ListingDetailContent() {
 
           {/* Title and Price Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
-            <h1 className="font-serif text-4xl md:text-5xl font-medium text-navy">
-              {clinic.name}
-            </h1>
+            <div className="flex flex-col gap-4">
+              <h1 className="font-serif text-4xl md:text-5xl font-medium text-navy">
+                {clinic.name}
+              </h1>
+              {/* Procedures on mobile */}
+              <div className="flex flex-wrap gap-2 md:hidden">
+                {clinic.procedures.map((proc, idx) => (
+                  <div key={idx} className="px-3 py-1 bg-blue/5 text-blue rounded-full text-[0.75rem] font-medium">
+                    {t.hero.procedures[proc as keyof typeof t.hero.procedures] || proc}
+                  </div>
+                ))}
+              </div>
+            </div>
             
-            <div className="flex flex-col items-start md:items-end">
-              <div className="text-[0.8rem] text-gray-500 mb-1">{t.listingDetail.startingFrom}</div>
-              <div className="text-3xl font-bold text-navy">€{clinic.price.toLocaleString()}</div>
+            <div className="flex flex-col md:flex-row items-end md:items-center gap-6 self-end md:self-auto w-full md:w-auto">
+              {/* Procedures on desktop (left of price) */}
+              <div className="hidden md:flex flex-wrap gap-2">
+                {clinic.procedures.map((proc, idx) => (
+                  <div key={idx} className="px-3 py-1 bg-blue/5 text-blue rounded-full text-[0.75rem] font-medium">
+                    {t.hero.procedures[proc as keyof typeof t.hero.procedures] || proc}
+                  </div>
+                ))}
+              </div>
+
+              <div className="flex flex-col items-end">
+                <div className="text-[0.8rem] text-gray-500 mb-1">{t.listingDetail.startingFrom}</div>
+                <div className="text-3xl font-bold text-navy">€{clinic.price.toLocaleString()}</div>
+              </div>
             </div>
           </div>
 
@@ -297,23 +318,9 @@ function ListingDetailContent() {
               
               {/* About */}
               <section>
-                <h2 className="text-2xl font-serif font-medium text-navy mb-4">{t.listingDetail.aboutClinic}</h2>
                 <p className="text-gray-600 leading-relaxed text-[1.05rem]">
                   {clinic.description}
                 </p>
-              </section>
-
-              {/* Procedures */}
-              <section>
-                <h2 className="text-2xl font-serif font-medium text-navy mb-4">{t.listingDetail.availableProcedures}</h2>
-                <div className="flex flex-wrap gap-3">
-                  {clinic.procedures.map((proc, idx) => (
-                    <div key={idx} className="bg-white border border-gray-200 px-4 py-2.5 rounded-xl text-[0.9rem] font-medium text-navy shadow-sm flex items-center gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-blue"></div>
-                      {t.hero.procedures[proc as keyof typeof t.hero.procedures] || proc}
-                    </div>
-                  ))}
-                </div>
               </section>
 
               {/* Comprehensive Features */}
