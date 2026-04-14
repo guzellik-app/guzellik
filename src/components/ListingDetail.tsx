@@ -16,6 +16,7 @@ import {
   Globe, 
   Clock, 
   ChevronRight, 
+  ChevronDown,
   ShieldCheck,
   Award,
   Heart
@@ -31,6 +32,36 @@ function ListingDetailContent() {
 
   const [allClinics, setAllClinics] = useState<any[]>(MOCK_CLINICS);
   const [loading, setLoading] = useState(true);
+  const [reviews, setReviews] = useState<any[]>([]);
+  const [isSubmittingReview, setIsSubmittingReview] = useState(false);
+  const [reviewRating, setReviewRating] = useState(1);
+  const [hoverRating, setHoverRating] = useState(0);
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
+  const [isReviewsExpanded, setIsReviewsExpanded] = useState(false);
+
+  const fetchReviews = async () => {
+    if (!clinic) return;
+    try {
+      const { supabase } = await import('../lib/supabase');
+      const { data, error } = await supabase
+        .from('reviews')
+        .select('*')
+        .eq('service_id', clinic.id)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        // If table doesn't exist yet, we'll just keep empty reviews
+        if (error.code === 'PGRST116' || error.message.includes('relation "reviews" does not exist')) {
+          console.warn('Reviews table not found. Please create it in Supabase.');
+          return;
+        }
+        throw error;
+      }
+      if (data) setReviews(data);
+    } catch (err) {
+      console.error('Error fetching reviews:', err);
+    }
+  };
 
   React.useEffect(() => {
     const checkSession = async () => {
@@ -153,6 +184,18 @@ function ListingDetailContent() {
 
   const clinic = allClinics.find(c => c.slug === slug);
 
+  const averageRating = reviews.length > 0 
+    ? reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length 
+    : (clinic?.rating || 0);
+  
+  const totalReviews = reviews.length > 0 ? reviews.length : (clinic?.reviews || 0);
+
+  React.useEffect(() => {
+    if (!loading && clinic) {
+      fetchReviews();
+    }
+  }, [loading, clinic?.id]);
+
   if (loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
@@ -169,7 +212,7 @@ function ListingDetailContent() {
         <div className="max-w-[1200px] mx-auto px-[5vw]">
           
           {/* Image Gallery */}
-          <div className="mb-12">
+          <div className="mb-6">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[400px] md:h-[500px]">
               <div className="md:col-span-3 h-full rounded-3xl overflow-hidden relative group">
                 <img 
@@ -202,18 +245,8 @@ function ListingDetailContent() {
             </div>
           </div>
 
-          {/* Info Bar (Breadcrumbs, Location, Type, Reviews) */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.85rem] text-gray-500 mb-6">
-            <div className="flex items-center gap-2">
-              <Link to={`/${lang === 'en' ? '' : lang + '/'}chatmt`} className="hover:text-blue transition-colors">
-                {t.listingDetail.search}
-              </Link>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-navy font-medium">{clinic.name}</span>
-            </div>
-            
-            <div className="w-px h-3 bg-gray-300 hidden sm:block"></div>
-
+          {/* Info Bar (Location, Type, Reviews) */}
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.85rem] text-gray-500 mb-4">
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-blue" />
               <span>{clinic.city}, {t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}</span>
@@ -227,11 +260,22 @@ function ListingDetailContent() {
 
             <div className="w-px h-3 bg-gray-300 hidden sm:block"></div>
 
-            <div className="flex items-center gap-1 text-gold font-semibold">
+            <button 
+              onClick={() => {
+                setIsReviewsExpanded(true);
+                setTimeout(() => {
+                  document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' });
+                }, 100);
+              }}
+              className="flex items-center gap-1 text-gold font-semibold hover:opacity-80 transition-opacity"
+            >
               <Star className="w-3.5 h-3.5 fill-gold" />
-              {clinic.rating} ({clinic.reviews} {t.listingDetail.reviews})
-            </div>
+              {averageRating.toFixed(1)} ({totalReviews} {t.listingDetail.reviews})
+            </button>
           </div>
+
+          {/* Divider Line */}
+          <div className="h-px bg-gray-200 w-full mb-8"></div>
 
           {/* Title and Price Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
@@ -449,6 +493,230 @@ function ListingDetailContent() {
             </div>
 
           </div>
+
+          {/* Reviews Section */}
+          <section id="reviews-section" className="mt-16 pt-16 border-t border-gray-200">
+            <button 
+              onClick={() => setIsReviewsExpanded(!isReviewsExpanded)}
+              className="w-full flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 text-left hover:opacity-80 transition-opacity group"
+            >
+              <div>
+                <div className="flex items-center gap-3 mb-2">
+                  <h2 className="text-3xl font-serif font-medium text-navy">{t.listingDetail.reviews}</h2>
+                  <ChevronDown className={`w-6 h-6 text-gray-400 transition-transform duration-300 ${isReviewsExpanded ? 'rotate-180' : ''}`} />
+                </div>
+                <div className="flex items-center gap-2 text-gold">
+                  <div className="flex">
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} className={`w-5 h-5 ${i < Math.floor(averageRating) ? 'fill-gold' : 'text-gray-300'}`} />
+                    ))}
+                  </div>
+                  <span className="font-bold text-lg">
+                    {averageRating.toFixed(1)}
+                  </span>
+                  <span className="text-gray-500">({totalReviews} {t.listingDetail.reviews})</span>
+                </div>
+              </div>
+              
+              <div className="hidden md:block">
+                <span className="text-blue font-medium flex items-center gap-2">
+                  {isReviewsExpanded ? 'Hide Reviews' : 'Show All Reviews'}
+                  <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isReviewsExpanded ? 'rotate-180' : ''}`} />
+                </span>
+              </div>
+            </button>
+
+            {isReviewsExpanded && (
+              <div className="animate-fade-down">
+                {/* Google Maps Style Rate & Review Prompt */}
+                {!isReviewFormOpen && (
+                  <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm mb-12 flex flex-col items-center text-center">
+                    <div className="w-16 h-16 rounded-full bg-blue/5 flex items-center justify-center mb-4">
+                      <Star className="w-8 h-8 text-blue" />
+                    </div>
+                    <h3 className="text-xl font-serif font-medium text-navy mb-2">Rate and review</h3>
+                    <p className="text-gray-500 text-sm mb-6">Share your experience to help others</p>
+                    <div className="flex items-center gap-3">
+                      {[1, 2, 3, 4, 5].map((star) => (
+                        <button
+                          key={star}
+                          onClick={() => {
+                            if (!sessionUser) {
+                              alert('Please sign in to write a review');
+                              return;
+                            }
+                            setReviewRating(star);
+                            setIsReviewFormOpen(true);
+                            setTimeout(() => {
+                              document.getElementById('review-form')?.scrollIntoView({ behavior: 'smooth' });
+                            }, 100);
+                          }}
+                          onMouseEnter={() => setHoverRating(star)}
+                          onMouseLeave={() => setHoverRating(0)}
+                          className="p-1 transition-transform hover:scale-125 focus:outline-none"
+                        >
+                          <Star 
+                            className={`w-10 h-10 transition-colors ${
+                              star <= (hoverRating || 0) 
+                                ? 'fill-gold text-gold' 
+                                : 'text-gray-200'
+                            }`} 
+                          />
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Review Form */}
+                <div id="review-form" className={`${isReviewFormOpen ? 'block' : 'hidden'} mb-12 bg-white p-8 rounded-3xl border border-gray-100 shadow-lg animate-fade-down`}>
+                  <h3 className="text-xl font-serif font-medium text-navy mb-6">Share your experience</h3>
+                  <form onSubmit={async (e) => {
+                    e.preventDefault();
+                    if (!sessionUser) return;
+                    
+                    setIsSubmittingReview(true);
+                    const form = e.target as HTMLFormElement;
+                    const comment = (form.elements.namedItem('comment') as HTMLTextAreaElement).value;
+                    
+                    try {
+                      const { supabase } = await import('../lib/supabase');
+                      const { error } = await supabase.from('reviews').insert({
+                        service_id: clinic.id,
+                        user_id: sessionUser.id,
+                        user_name: sessionUser.user_metadata?.full_name || sessionUser.email?.split('@')[0] || 'Anonymous',
+                        rating: reviewRating,
+                        comment,
+                        created_at: new Date().toISOString()
+                      });
+                      
+                      if (error) throw error;
+                      
+                      alert('Review submitted successfully!');
+                      form.reset();
+                      setIsReviewFormOpen(false);
+                      fetchReviews();
+                    } catch (err: any) {
+                      alert(`Error submitting review: ${err.message}`);
+                    } finally {
+                      setIsSubmittingReview(false);
+                    }
+                  }}>
+                    <div className="mb-8">
+                      <label className="block text-sm font-medium text-gray-700 mb-3">Rating</label>
+                      <div className="flex items-center gap-2">
+                        {[1, 2, 3, 4, 5].map((star) => (
+                          <button
+                            key={star}
+                            type="button"
+                            onClick={() => setReviewRating(star)}
+                            onMouseEnter={() => setHoverRating(star)}
+                            onMouseLeave={() => setHoverRating(0)}
+                            className="p-1 transition-transform hover:scale-110 focus:outline-none"
+                          >
+                            <Star 
+                              className={`w-8 h-8 transition-colors ${
+                                star <= (hoverRating || reviewRating) 
+                                  ? 'fill-gold text-gold' 
+                                  : 'text-gray-300'
+                              }`} 
+                            />
+                          </button>
+                        ))}
+                        <span className="ml-4 text-sm font-medium text-gray-500">
+                          {reviewRating === 5 ? 'Excellent' : 
+                           reviewRating === 4 ? 'Very Good' : 
+                           reviewRating === 3 ? 'Good' : 
+                           reviewRating === 2 ? 'Fair' : 'Poor'}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="mb-6">
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Your Review</label>
+                      <textarea name="comment" required rows={4} placeholder="Tell us about your experience..." className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue resize-none"></textarea>
+                    </div>
+                    <div className="flex justify-end gap-3">
+                      <button 
+                        type="button" 
+                        onClick={() => setIsReviewFormOpen(false)}
+                        className="px-6 py-2.5 rounded-xl text-gray-500 hover:bg-gray-50 transition-colors"
+                      >
+                        Cancel
+                      </button>
+                      <button 
+                        type="submit" 
+                        disabled={isSubmittingReview}
+                        className="bg-navy text-white px-8 py-2.5 rounded-xl font-medium hover:bg-blue transition-colors disabled:opacity-50"
+                      >
+                        {isSubmittingReview ? 'Submitting...' : 'Submit Review'}
+                      </button>
+                    </div>
+                  </form>
+                </div>
+                
+                <div className="space-y-6">
+                  {reviews.length === 0 ? (
+                    <div className="bg-white p-8 rounded-3xl border border-gray-100 text-center text-gray-500">
+                      {clinic.reviews > 0 ? (
+                        <div className="space-y-4">
+                          <p>Loading real reviews...</p>
+                          {/* Fallback to mock reviews if real ones aren't loaded yet but count > 0 */}
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 opacity-50">
+                            {[1, 2].map((i) => (
+                              <div key={i} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm text-left">
+                                <div className="flex items-center gap-3 mb-4">
+                                  <div className="w-10 h-10 rounded-full bg-blue/10 flex items-center justify-center text-blue font-bold">
+                                    {i === 1 ? 'JD' : 'AS'}
+                                  </div>
+                                  <div>
+                                    <div className="font-bold text-navy">{i === 1 ? 'John Doe' : 'Anna Smith'}</div>
+                                    <div className="text-xs text-gray-400">Sample Review</div>
+                                  </div>
+                                </div>
+                                <p className="text-gray-600 text-sm italic">
+                                  "{i === 1 ? 'Exceptional service and very professional staff.' : 'The results exceeded my expectations.'}"
+                                </p>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ) : 'No reviews yet for this service. Be the first to write one!'}
+                    </div>
+                  ) : (
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                      {reviews.map((review) => (
+                        <div key={review.id} className="bg-white p-6 rounded-2xl border border-gray-100 shadow-sm">
+                          <div className="flex items-center gap-3 mb-4">
+                            <div className="w-10 h-10 rounded-full bg-blue/10 flex items-center justify-center text-blue font-bold">
+                              {review.user_name.substring(0, 2).toUpperCase()}
+                            </div>
+                            <div>
+                              <div className="font-bold text-navy">{review.user_name}</div>
+                              <div className="text-xs text-gray-400">
+                                {new Date(review.created_at).toLocaleDateString(lang === 'tr' ? 'tr-TR' : lang === 'de' ? 'de-DE' : 'en-US', {
+                                  year: 'numeric',
+                                  month: 'long',
+                                  day: 'numeric'
+                                })}
+                              </div>
+                            </div>
+                            <div className="ml-auto flex text-gold">
+                              {[...Array(5)].map((_, starIdx) => (
+                                <Star key={starIdx} className={`w-3 h-3 ${starIdx < review.rating ? 'fill-gold' : 'text-gray-300'}`} />
+                              ))}
+                            </div>
+                          </div>
+                          <p className="text-gray-600 text-sm italic">
+                            "{review.comment}"
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </section>
         </div>
       </main>
 
