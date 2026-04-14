@@ -37,8 +37,8 @@ export default function App({ lang }: { lang: Language }) {
     return () => observer.disconnect();
   }, [lang]);
 
-  const handleSearch = (searchParams?: { procedure: string, location: string, budget: string }) => {
-    const queryParams = searchParams ? `?procedure=${encodeURIComponent(searchParams.procedure)}&location=${encodeURIComponent(searchParams.location)}&budget=${encodeURIComponent(searchParams.budget)}` : '';
+  const handleSearch = (searchParams?: { procedure: string, location: string, query: string }) => {
+    const queryParams = searchParams ? `?procedure=${encodeURIComponent(searchParams.procedure)}&location=${encodeURIComponent(searchParams.location)}&query=${encodeURIComponent(searchParams.query)}` : '';
     if (lang === 'en') {
       navigate(`/chatmt${queryParams}`);
     } else {

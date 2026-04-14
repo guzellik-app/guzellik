@@ -6,7 +6,7 @@ import { Modal } from './Modal';
 import { BottomNav } from './BottomNav';
 import { I18nProvider, useI18n } from '../I18nContext';
 import { Language } from '../i18n';
-import { Search, MapPin, CreditCard, Heart, Star, Filter, ChevronDown, X } from 'lucide-react';
+import { Search, MapPin, CreditCard, Heart, Star, Filter, ChevronDown, X, List } from 'lucide-react';
 import { MOCK_CLINICS } from '../data/clinics';
 
 const MOCK_CLINICS_REMOVED = true;
@@ -18,7 +18,6 @@ function SearchResultsContent() {
 
   const [searchProcedure, setSearchProcedure] = useState('');
   const [searchLocation, setSearchLocation] = useState('');
-  const [searchBudget, setSearchBudget] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [isFilterDrawerOpen, setIsFilterDrawerOpen] = useState(false);
 
@@ -26,7 +25,7 @@ function SearchResultsContent() {
     const params = new URLSearchParams(window.location.search);
     const procedure = params.get('procedure');
     const location = params.get('location');
-    const budget = params.get('budget');
+    const query = params.get('query');
     if (procedure) setSearchProcedure(procedure);
     if (location) {
       setSearchLocation(location);
@@ -41,7 +40,7 @@ function SearchResultsContent() {
         })
         .catch(err => console.error('Error detecting location:', err));
     }
-    if (budget) setSearchBudget(budget);
+    if (query) setSearchQuery(query);
   }, []);
 
   const [filterRatings, setFilterRatings] = useState<number[]>([]);
@@ -170,12 +169,6 @@ function SearchResultsContent() {
       if (searchQuery && !c.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
       if (searchProcedure && !c.procedures.includes(searchProcedure)) return false;
       if (searchLocation && !c.city.toLowerCase().includes(searchLocation.toLowerCase()) && !c.countryKey.toLowerCase().includes(searchLocation.toLowerCase())) return false;
-      if (searchBudget) {
-        if (searchBudget === 'b1' && c.price >= 2000) return false;
-        if (searchBudget === 'b2' && (c.price < 2000 || c.price > 4000)) return false;
-        if (searchBudget === 'b3' && (c.price < 4000 || c.price > 6000)) return false;
-        if (searchBudget === 'b4' && c.price <= 6000) return false;
-      }
       if (filterRatings.length > 0) {
         const minRating = Math.min(...filterRatings);
         if (c.rating < minRating) return false;
@@ -198,12 +191,12 @@ function SearchResultsContent() {
       }
       return b.reviews - a.reviews; // recommended
     });
-  }, [searchProcedure, searchLocation, searchBudget, filterRatings, filterServices, filterTypes, sortBy, allClinics]);
+  }, [searchProcedure, searchLocation, filterRatings, filterServices, filterTypes, sortBy, allClinics]);
 
   // Reset to page 1 when filters change
   React.useEffect(() => {
     setCurrentPage(1);
-  }, [searchQuery, searchProcedure, searchLocation, searchBudget, filterRatings, filterServices, filterTypes, sortBy]);
+  }, [searchQuery, searchProcedure, searchLocation, filterRatings, filterServices, filterTypes, sortBy]);
 
   // Calculate paginated clinics
   const totalPages = Math.ceil(filteredClinics.length / itemsPerPage);
@@ -247,8 +240,16 @@ function SearchResultsContent() {
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder={t.hero.searchPlaceholder || "Search clinics or services..."}
-                  className="w-full py-2.5 pr-3.5 pl-10 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:bg-white"
+                  className="w-full py-2.5 pr-10 pl-10 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:bg-white"
                 />
+                {searchQuery && (
+                  <button 
+                    onClick={() => setSearchQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
           </div>
@@ -300,8 +301,16 @@ function SearchResultsContent() {
                     value={searchLocation}
                     onChange={e => setSearchLocation(e.target.value)}
                     placeholder="Search city or country..."
-                    className="w-full py-2 pr-3 pl-8 border border-gray-200 rounded-md font-sans text-[0.82rem] text-text bg-off-white outline-none focus:border-blue focus:bg-white"
+                    className="w-full py-2 pr-10 pl-8 border border-gray-200 rounded-md font-sans text-[0.82rem] text-text bg-off-white outline-none focus:border-blue focus:bg-white"
                   />
+                  {searchLocation && (
+                    <button 
+                      onClick={() => setSearchLocation('')}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  )}
                 </div>
               </div>
 
@@ -309,7 +318,7 @@ function SearchResultsContent() {
               <div className="mb-6">
                 <h4 className="text-[0.85rem] font-semibold text-gray-800 mb-3">Category</h4>
                 <div className="relative">
-                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
+                  <List className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
                   <select 
                     value={searchProcedure} 
                     onChange={e => setSearchProcedure(e.target.value)}
@@ -323,26 +332,6 @@ function SearchResultsContent() {
                     <option value="liposuction">{t.hero.procedures.liposuction}</option>
                     <option value="dentalAesthetics">{t.hero.procedures.dentalAesthetics}</option>
                     <option value="eyelidSurgery">{t.hero.procedures.eyelidSurgery}</option>
-                  </select>
-                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
-                </div>
-              </div>
-
-              {/* Budget Filter */}
-              <div className="mb-6">
-                <h4 className="text-[0.85rem] font-semibold text-gray-800 mb-3">Budget</h4>
-                <div className="relative">
-                  <CreditCard className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
-                  <select 
-                    value={searchBudget}
-                    onChange={e => setSearchBudget(e.target.value)}
-                    className="w-full py-2 pr-3 pl-8 border border-gray-200 rounded-md font-sans text-[0.82rem] text-text bg-off-white outline-none appearance-none focus:border-blue focus:bg-white"
-                  >
-                    <option value="">Any Budget</option>
-                    <option value="b1">{t.hero.budgets.b1}</option>
-                    <option value="b2">{t.hero.budgets.b2}</option>
-                    <option value="b3">{t.hero.budgets.b3}</option>
-                    <option value="b4">{t.hero.budgets.b4}</option>
                   </select>
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
                 </div>

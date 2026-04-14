@@ -698,7 +698,7 @@ function AddServicePage() {
   
   const [title, setTitle] = useState('');
   const [category, setCategory] = useState('Hair Transplant');
-  const [countryCity, setCountryCity] = useState('');
+  const [countryCity, setCountryCity] = useState('Istanbul');
   const [regularPrice, setRegularPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
   const [duration, setDuration] = useState('');
@@ -954,20 +954,21 @@ function AddServicePage() {
                   <label className="text-sm font-medium">{t.dashboard.countryCity}</label>
                   <div className="relative">
                     <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
-                    <select 
+                    <input 
+                      type="text"
                       value={countryCity}
                       onChange={(e) => setCountryCity(e.target.value)}
-                      className="w-full py-2 pr-8 pl-9 border rounded-md bg-background focus:ring-2 focus:ring-blue focus:border-blue outline-none transition-all appearance-none"
-                    >
-                      <option value="">{t.hero.locationPlaceholder}</option>
-                      <option value="turkey">{t.hero.locations.turkey}</option>
-                      <option value="spain">{t.hero.locations.spain}</option>
-                      <option value="germany">{t.hero.locations.germany}</option>
-                      <option value="thailand">{t.hero.locations.thailand}</option>
-                      <option value="switzerland">{t.hero.locations.switzerland}</option>
-                      <option value="austria">{t.hero.locations.austria}</option>
-                    </select>
-                    <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
+                      placeholder={t.hero.locationPlaceholder}
+                      className="w-full py-2 pr-10 pl-9 border rounded-md bg-background focus:ring-2 focus:ring-blue focus:border-blue outline-none transition-all"
+                    />
+                    {countryCity && (
+                      <button 
+                        onClick={() => setCountryCity('')}
+                        className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    )}
                   </div>
                 </div>
               </div>

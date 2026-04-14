@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { Search, MapPin, CreditCard, CheckCircle, Star, ChevronDown } from 'lucide-react';
+import { Search, MapPin, CreditCard, CheckCircle, Star, ChevronDown, List, X } from 'lucide-react';
 import { useI18n } from '../I18nContext';
 
-export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: string, location: string, budget: string }) => void }) {
+export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: string, location: string, query: string }) => void }) {
   const { t } = useI18n();
   const [procedure, setProcedure] = useState('');
-  const [location, setLocation] = useState('');
-  const [budget, setBudget] = useState('');
+  const [location, setLocation] = useState('Istanbul');
+  const [query, setQuery] = useState('');
 
   const handleSearchClick = () => {
-    onSearch({ procedure, location, budget });
+    onSearch({ procedure, location, query });
   };
 
   return (
@@ -33,9 +33,9 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
 
           <div className="bg-white border border-gray-200 rounded-2xl p-7 shadow-lg animate-fade-up" style={{ animationDelay: '0.3s' }}>
             <div className="text-[0.72rem] font-semibold text-gray-400 tracking-wider uppercase mb-2">{t.hero.searchLabel}</div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 mb-4">
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_2fr] gap-3 mb-4">
               <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
+                <List className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
                 <select 
                   value={procedure}
                   onChange={(e) => setProcedure(e.target.value)}
@@ -50,37 +50,43 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
                   <option value="dentalAesthetics">{t.hero.procedures.dentalAesthetics}</option>
                   <option value="eyelidSurgery">{t.hero.procedures.eyelidSurgery}</option>
                 </select>
-              </div>
-              <div className="relative">
-                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
-                <select 
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="w-full py-3 pr-3.5 pl-9 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all appearance-none focus:border-blue focus:shadow-[0_0_0_3px_rgba(45,107,228,0.12)] focus:bg-white"
-                >
-                  <option value="">{t.hero.locationPlaceholder}</option>
-                  <option value="turkey">{t.hero.locations.turkey}</option>
-                  <option value="spain">{t.hero.locations.spain}</option>
-                  <option value="germany">{t.hero.locations.germany}</option>
-                  <option value="thailand">{t.hero.locations.thailand}</option>
-                  <option value="switzerland">{t.hero.locations.switzerland}</option>
-                  <option value="austria">{t.hero.locations.austria}</option>
-                </select>
                 <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4 pointer-events-none" />
               </div>
               <div className="relative">
-                <CreditCard className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
-                <select 
-                  value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                  className="w-full py-3 pr-3.5 pl-9 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all appearance-none focus:border-blue focus:shadow-[0_0_0_3px_rgba(45,107,228,0.12)] focus:bg-white"
-                >
-                  <option value="">{t.hero.budgetPlaceholder}</option>
-                  <option value="b1">{t.hero.budgets.b1}</option>
-                  <option value="b2">{t.hero.budgets.b2}</option>
-                  <option value="b3">{t.hero.budgets.b3}</option>
-                  <option value="b4">{t.hero.budgets.b4}</option>
-                </select>
+                <MapPin className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
+                <input 
+                  type="text"
+                  value={location}
+                  onChange={(e) => setLocation(e.target.value)}
+                  placeholder={t.hero.locationPlaceholder}
+                  className="w-full py-3 pr-10 pl-9 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:shadow-[0_0_0_3px_rgba(45,107,228,0.12)] focus:bg-white"
+                />
+                {location && (
+                  <button 
+                    onClick={() => setLocation('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
+              <div className="relative">
+                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
+                <input 
+                  type="text"
+                  value={query}
+                  onChange={(e) => setQuery(e.target.value)}
+                  placeholder={t.hero.searchPlaceholder || "Search clinics or services..."}
+                  className="w-full py-3 pr-10 pl-9 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:shadow-[0_0_0_3px_rgba(45,107,228,0.12)] focus:bg-white"
+                />
+                {query && (
+                  <button 
+                    onClick={() => setQuery('')}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                  >
+                    <X className="w-4 h-4" />
+                  </button>
+                )}
               </div>
             </div>
             <button onClick={handleSearchClick} className="w-full py-3.5 bg-gradient-to-br from-blue to-blue-dark text-white border-none rounded-md font-sans text-[0.95rem] font-semibold cursor-pointer tracking-wide shadow-[0_6px_20px_rgba(45,107,228,0.4)] transition-all flex items-center justify-center gap-2 hover:-translate-y-[2px] hover:shadow-[0_10px_28px_rgba(45,107,228,0.5)]">
