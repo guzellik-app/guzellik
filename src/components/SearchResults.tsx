@@ -166,7 +166,14 @@ function SearchResultsContent() {
 
   const filteredClinics = useMemo(() => {
     return allClinics.filter(c => {
-      if (searchQuery && !c.name.toLowerCase().includes(searchQuery.toLowerCase())) return false;
+      if (searchQuery) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = c.name.toLowerCase().includes(query);
+        const matchesDescription = c.description?.toLowerCase().includes(query);
+        const matchesProcedures = c.procedures?.some((p: string) => p.toLowerCase().includes(query));
+        
+        if (!matchesName && !matchesDescription && !matchesProcedures) return false;
+      }
       if (searchProcedure && !c.procedures.includes(searchProcedure)) return false;
       if (searchLocation && !c.city.toLowerCase().includes(searchLocation.toLowerCase()) && !c.countryKey.toLowerCase().includes(searchLocation.toLowerCase())) return false;
       if (filterRatings.length > 0) {
@@ -191,7 +198,7 @@ function SearchResultsContent() {
       }
       return b.reviews - a.reviews; // recommended
     });
-  }, [searchProcedure, searchLocation, filterRatings, filterServices, filterTypes, sortBy, allClinics]);
+  }, [searchQuery, searchProcedure, searchLocation, filterRatings, filterServices, filterTypes, sortBy, allClinics]);
 
   // Reset to page 1 when filters change
   React.useEffect(() => {

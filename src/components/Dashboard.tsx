@@ -919,6 +919,63 @@ function AddServicePage() {
         <div className="lg:col-span-2 space-y-6">
           <Card>
             <CardHeader>
+              <CardTitle>{t.dashboard.mediaGallery}</CardTitle>
+              <CardDescription>{t.dashboard.mediaGalleryDesc}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-50 hover:border-blue/50 transition-all cursor-pointer group relative">
+                <input 
+                  type="file" 
+                  multiple 
+                  accept="image/png, image/jpeg, image/gif, image/svg+xml" 
+                  onChange={handleImageUpload} 
+                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                  disabled={isUploading}
+                />
+                <div className="w-12 h-12 rounded-full bg-blue/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
+                  <Upload className="h-6 w-6 text-blue" />
+                </div>
+                <p className="text-sm font-medium text-gray-900">
+                  {isUploading ? t.dashboard.uploading : t.dashboard.clickToUpload}
+                </p>
+                <p className="text-xs text-gray-500 mt-1">{t.dashboard.uploadFormat}</p>
+              </div>
+              
+              {images.length > 0 && (
+                <div className="grid grid-cols-3 gap-2">
+                  {images.map((img, index) => (
+                    <div key={index} className="aspect-square rounded-md bg-muted relative group overflow-hidden border">
+                      <img src={img} alt={`Preview ${index}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <Button 
+                          variant="ghost" 
+                          size="icon" 
+                          className="text-white hover:text-red-400 hover:bg-transparent"
+                          onClick={() => removeImage(index)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  ))}
+                  <div className="aspect-square rounded-md border-2 border-dashed flex items-center justify-center text-muted-foreground hover:bg-muted/50 cursor-pointer transition-colors relative">
+                    <input 
+                      type="file" 
+                      multiple 
+                      accept="image/png, image/jpeg, image/gif, image/svg+xml" 
+                      onChange={handleImageUpload} 
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      disabled={isUploading}
+                    />
+                    <Plus className="h-5 w-5" />
+                  </div>
+                </div>
+              )}
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
               <CardTitle>{t.dashboard.basicDetails}</CardTitle>
               <CardDescription>{t.dashboard.basicDetailsDesc}</CardDescription>
             </CardHeader>
@@ -932,6 +989,15 @@ function AddServicePage() {
                   className="w-full px-3 py-2 border rounded-md focus:ring-2 focus:ring-blue focus:border-blue outline-none transition-all" 
                   placeholder={t.dashboard.serviceNamePlaceholder} 
                 />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t.dashboard.description}</label>
+                <textarea 
+                  value={description}
+                  onChange={(e) => setDescription(e.target.value)}
+                  className="w-full px-3 py-2 border rounded-md min-h-[150px] focus:ring-2 focus:ring-blue focus:border-blue outline-none transition-all resize-y" 
+                  placeholder={t.dashboard.descriptionPlaceholder}
+                ></textarea>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div className="space-y-2">
@@ -1005,15 +1071,6 @@ function AddServicePage() {
                     placeholder={t.dashboard.durationPlaceholder} 
                   />
                 </div>
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t.dashboard.description}</label>
-                <textarea 
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="w-full px-3 py-2 border rounded-md min-h-[150px] focus:ring-2 focus:ring-blue focus:border-blue outline-none transition-all resize-y" 
-                  placeholder={t.dashboard.descriptionPlaceholder}
-                ></textarea>
               </div>
             </CardContent>
           </Card>
@@ -1092,63 +1149,6 @@ function AddServicePage() {
         </div>
 
         <div className="space-y-6">
-          <Card>
-            <CardHeader>
-              <CardTitle>{t.dashboard.mediaGallery}</CardTitle>
-              <CardDescription>{t.dashboard.mediaGalleryDesc}</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-50 hover:border-blue/50 transition-all cursor-pointer group relative">
-                <input 
-                  type="file" 
-                  multiple 
-                  accept="image/png, image/jpeg, image/gif, image/svg+xml" 
-                  onChange={handleImageUpload} 
-                  className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                  disabled={isUploading}
-                />
-                <div className="w-12 h-12 rounded-full bg-blue/10 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
-                  <Upload className="h-6 w-6 text-blue" />
-                </div>
-                <p className="text-sm font-medium text-gray-900">
-                  {isUploading ? t.dashboard.uploading : t.dashboard.clickToUpload}
-                </p>
-                <p className="text-xs text-gray-500 mt-1">{t.dashboard.uploadFormat}</p>
-              </div>
-              
-              {images.length > 0 && (
-                <div className="grid grid-cols-3 gap-2">
-                  {images.map((img, index) => (
-                    <div key={index} className="aspect-square rounded-md bg-muted relative group overflow-hidden border">
-                      <img src={img} alt={`Preview ${index}`} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                      <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <Button 
-                          variant="ghost" 
-                          size="icon" 
-                          className="text-white hover:text-red-400 hover:bg-transparent"
-                          onClick={() => removeImage(index)}
-                        >
-                          <X className="h-4 w-4" />
-                        </Button>
-                      </div>
-                    </div>
-                  ))}
-                  <div className="aspect-square rounded-md border-2 border-dashed flex items-center justify-center text-muted-foreground hover:bg-muted/50 cursor-pointer transition-colors relative">
-                    <input 
-                      type="file" 
-                      multiple 
-                      accept="image/png, image/jpeg, image/gif, image/svg+xml" 
-                      onChange={handleImageUpload} 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      disabled={isUploading}
-                    />
-                    <Plus className="h-5 w-5" />
-                  </div>
-                </div>
-              )}
-            </CardContent>
-          </Card>
-
           <Card>
             <CardHeader>
               <CardTitle>{t.dashboard.publishing}</CardTitle>
