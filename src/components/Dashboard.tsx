@@ -30,7 +30,8 @@ import {
   Upload,
   X,
   MapPin,
-  Send
+  Send,
+  ExternalLink
 } from 'lucide-react';
 import { useI18n, I18nProvider } from '../I18nContext';
 import { Language } from '../i18n';
@@ -911,7 +912,6 @@ function AddServicePage() {
         </Button>
         <div>
           <h2 className="text-2xl font-bold tracking-tight">{id ? t.dashboard.editService : t.dashboard.addNewService}</h2>
-          <p className="text-muted-foreground">{id ? t.dashboard.editServiceDesc : t.dashboard.addNewServiceDesc}</p>
         </div>
       </div>
       
@@ -920,7 +920,6 @@ function AddServicePage() {
           <Card>
             <CardHeader>
               <CardTitle>{t.dashboard.mediaGallery}</CardTitle>
-              <CardDescription>{t.dashboard.mediaGalleryDesc}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="border-2 border-dashed border-gray-200 rounded-xl p-8 flex flex-col items-center justify-center text-center hover:bg-gray-50 hover:border-blue/50 transition-all cursor-pointer group relative">
@@ -977,7 +976,6 @@ function AddServicePage() {
           <Card>
             <CardHeader>
               <CardTitle>{t.dashboard.basicDetails}</CardTitle>
-              <CardDescription>{t.dashboard.basicDetailsDesc}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -1078,7 +1076,6 @@ function AddServicePage() {
           <Card>
             <CardHeader>
               <CardTitle>{t.dashboard.clinicFeatures}</CardTitle>
-              <CardDescription>{t.dashboard.clinicFeaturesDesc}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-3">
@@ -1337,14 +1334,65 @@ function ClinicSettings() {
     <div className="space-y-6">
       <div>
         <h2 className="text-2xl font-bold tracking-tight">{t.dashboard.clinicProfileSettings}</h2>
-        <p className="text-muted-foreground">{t.dashboard.clinicProfileSettingsDesc}</p>
       </div>
       
       <div className="grid gap-6">
         <Card>
           <CardHeader>
+            <CardTitle>{t.dashboard.media}</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-6">
+            <div className="space-y-2">
+              <label className="text-sm font-medium">{t.dashboard.coverImage}</label>
+              <div className="w-full h-40 rounded-xl bg-gray-100 border overflow-hidden relative group">
+                <img src={profile.coverImage} alt="Cover" className="w-full h-full object-cover" />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={(e) => handleImageUpload(e, 'cover')} 
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      disabled={isUploadingCover}
+                    />
+                    <Button variant="secondary" size="sm" disabled={isUploadingCover}>
+                      {isUploadingCover ? t.dashboard.uploading : t.dashboard.changeCover}
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="flex items-center gap-6">
+              <div className="w-24 h-24 rounded-full bg-gray-100 border overflow-hidden flex-shrink-0">
+                <img src={profile.profilePicture} alt="Logo" className="w-full h-full object-cover" />
+              </div>
+              <div className="space-y-2">
+                <label className="text-sm font-medium">{t.dashboard.profilePicture}</label>
+                <div className="flex gap-2">
+                  <div className="relative">
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      onChange={(e) => handleImageUpload(e, 'profile')} 
+                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                      disabled={isUploadingProfile}
+                    />
+                    <Button variant="outline" size="sm" disabled={isUploadingProfile}>
+                      {isUploadingProfile ? t.dashboard.uploading : t.dashboard.change}
+                    </Button>
+                  </div>
+                  <Button variant="ghost" size="sm" className="text-red-600" onClick={() => handleRemoveImage('profile')}>{t.dashboard.remove}</Button>
+                </div>
+                <p className="text-xs text-muted-foreground">Recommended size: 400x400px. Max 2MB.</p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
             <CardTitle>{t.dashboard.basicInformation}</CardTitle>
-            <CardDescription>{t.dashboard.basicInformationDesc}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1370,62 +1418,7 @@ function ClinicSettings() {
 
         <Card>
           <CardHeader>
-            <CardTitle>{t.dashboard.media}</CardTitle>
-            <CardDescription>{t.dashboard.mediaDesc}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="flex items-center gap-6">
-              <div className="w-24 h-24 rounded-full bg-gray-100 border overflow-hidden flex-shrink-0">
-                <img src={profile.profilePicture} alt="Logo" className="w-full h-full object-cover" />
-              </div>
-              <div className="space-y-2">
-                <label className="text-sm font-medium">{t.dashboard.profilePicture}</label>
-                <div className="flex gap-2">
-                  <div className="relative">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={(e) => handleImageUpload(e, 'profile')} 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      disabled={isUploadingProfile}
-                    />
-                    <Button variant="outline" size="sm" disabled={isUploadingProfile}>
-                      {isUploadingProfile ? t.dashboard.uploading : t.dashboard.change}
-                    </Button>
-                  </div>
-                  <Button variant="ghost" size="sm" className="text-red-600" onClick={() => handleRemoveImage('profile')}>{t.dashboard.remove}</Button>
-                </div>
-                <p className="text-xs text-muted-foreground">Recommended size: 400x400px. Max 2MB.</p>
-              </div>
-            </div>
-            
-            <div className="space-y-2">
-              <label className="text-sm font-medium">{t.dashboard.coverImage}</label>
-              <div className="w-full h-40 rounded-xl bg-gray-100 border overflow-hidden relative group">
-                <img src={profile.coverImage} alt="Cover" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="relative">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={(e) => handleImageUpload(e, 'cover')} 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      disabled={isUploadingCover}
-                    />
-                    <Button variant="secondary" size="sm" disabled={isUploadingCover}>
-                      {isUploadingCover ? t.dashboard.uploading : t.dashboard.changeCover}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
             <CardTitle>{t.dashboard.locationContact}</CardTitle>
-            <CardDescription>{t.dashboard.locationContactDesc}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1452,7 +1445,6 @@ function ClinicSettings() {
         <Card>
           <CardHeader>
             <CardTitle>{t.dashboard.onlinePresence}</CardTitle>
-            <CardDescription>{t.dashboard.onlinePresenceDesc}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1479,7 +1471,6 @@ function ClinicSettings() {
         <Card>
           <CardHeader>
             <CardTitle>{t.dashboard.accountSettings}</CardTitle>
-            <CardDescription>{t.dashboard.accountSettingsDesc}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -1524,6 +1515,15 @@ function ClinicSettings() {
             </div>
           </CardContent>
         </Card>
+
+        <div className="flex justify-end -mb-6">
+          <Button variant="link" asChild className="text-blue hover:text-blue/80 font-medium h-auto p-0">
+            <Link to={`/mt/${profile.username || ''}`} target="_blank" className="flex items-center">
+              <ExternalLink className="mr-1.5 h-4 w-4" />
+              {t.dashboard.viewProfile}
+            </Link>
+          </Button>
+        </div>
         
         <div className="flex justify-between items-center mt-8 pt-6 border-t">
           <Button variant="destructive" onClick={async () => {

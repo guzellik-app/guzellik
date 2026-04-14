@@ -280,7 +280,7 @@ function ListingDetailContent() {
           {/* Title and Price Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
             <div className="flex flex-col gap-4">
-              <h1 className="font-serif text-4xl md:text-5xl font-medium text-navy">
+              <h1 className="font-robot text-4xl md:text-5xl font-medium text-navy">
                 {clinic.name}
               </h1>
               {/* Procedures on mobile */}
