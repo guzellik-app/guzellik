@@ -123,36 +123,12 @@ function ClinicProfileContent() {
     <div className="min-h-screen bg-off-white font-sans selection:bg-blue/20 selection:text-navy flex flex-col">
       <Navbar onOpenModal={() => setIsModalOpen(true)} />
       
-      <main className="flex-grow pb-24">
-        {/* Cover Image */}
-        <div className="w-full h-[300px] md:h-[400px] relative pt-[80px]">
-          <div className="absolute inset-0">
-            <img 
-              src={clinic.coverImage} 
-              alt={`${clinic.name} cover`} 
-              className="w-full h-full object-cover"
-              referrerPolicy="no-referrer"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/40"></div>
-          </div>
-          
-          <div className="max-w-[1200px] mx-auto px-[5vw] relative z-10 h-full flex flex-col">
-            {/* Breadcrumbs */}
-            <div className="flex items-center gap-2 text-[0.8rem] text-white/80 mt-6">
-              <Link to={`/${lang === 'en' ? '' : lang + '/'}chatmt`} className="hover:text-white transition-colors">
-                {t.clinicProfile.search}
-              </Link>
-              <ChevronRight className="w-3 h-3" />
-              <span className="text-white font-medium">{clinic.name}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="max-w-[1200px] mx-auto px-[5vw] relative -mt-24">
+      <main className="flex-grow pt-[100px] pb-24">
+        <div className="max-w-[1200px] mx-auto px-[5vw] relative">
           
           {/* Header Section with Logo */}
           <div className="bg-white rounded-3xl p-6 md:p-10 shadow-xl border border-gray-100 flex flex-col md:flex-row gap-8 items-start relative z-10 mb-12">
-            <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 rounded-2xl overflow-hidden border-4 border-white shadow-lg bg-white">
+            <div className="w-32 h-32 md:w-40 md:h-40 shrink-0 rounded-full overflow-hidden border-4 border-white shadow-lg bg-white">
               <img 
                 src={clinic.logo} 
                 alt={`${clinic.name} logo`} 

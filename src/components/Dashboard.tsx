@@ -1342,27 +1342,6 @@ function ClinicSettings() {
             <CardTitle>{t.dashboard.media}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <label className="text-sm font-medium">{t.dashboard.coverImage}</label>
-              <div className="w-full h-40 rounded-xl bg-gray-100 border overflow-hidden relative group">
-                <img src={profile.coverImage} alt="Cover" className="w-full h-full object-cover" />
-                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                  <div className="relative">
-                    <input 
-                      type="file" 
-                      accept="image/*" 
-                      onChange={(e) => handleImageUpload(e, 'cover')} 
-                      className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                      disabled={isUploadingCover}
-                    />
-                    <Button variant="secondary" size="sm" disabled={isUploadingCover}>
-                      {isUploadingCover ? t.dashboard.uploading : t.dashboard.changeCover}
-                    </Button>
-                  </div>
-                </div>
-              </div>
-            </div>
-
             <div className="flex items-center gap-6">
               <div className="w-24 h-24 rounded-full bg-gray-100 border overflow-hidden flex-shrink-0">
                 <img src={profile.profilePicture} alt="Logo" className="w-full h-full object-cover" />
