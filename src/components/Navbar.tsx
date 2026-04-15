@@ -83,7 +83,7 @@ export function Navbar({ onOpenModal }: { onOpenModal: () => void }) {
   ];
 
   return (
-    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-[5vw] h-[60px] transition-shadow duration-300 ${scrolled ? 'shadow-md bg-white/90 backdrop-blur-md border-b border-sky/30' : 'bg-white/85 backdrop-blur-md border-b border-sky/30'}`}>
+    <nav className={`fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-[5vw] h-[60px] transition-all duration-300 bg-white/85 backdrop-blur-md border-b border-blue-300`}>
       <div className="flex items-center gap-3">
         <button 
           onClick={toggleMenu}

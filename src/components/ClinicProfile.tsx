@@ -123,7 +123,7 @@ function ClinicProfileContent() {
     <div className="min-h-screen bg-off-white font-sans selection:bg-blue/20 selection:text-navy flex flex-col">
       <Navbar onOpenModal={() => setIsModalOpen(true)} />
       
-      <main className="flex-grow pt-[100px] pb-24">
+      <main className="flex-grow pt-[40px] pb-24">
         <div className="max-w-[1200px] mx-auto px-[5vw] relative">
           
           {/* Header Section with Logo */}
@@ -198,6 +198,7 @@ function ClinicProfileContent() {
 
               {/* Their Listings Below */}
               <section>
+                <div className="h-px bg-blue-300 w-full mb-12"></div>
                 <h2 className="text-2xl font-serif font-medium text-navy mb-6">{t.clinicProfile.clinicListings}</h2>
                 {services.length === 0 ? (
                   <p className="text-gray-500">{t.clinicProfile.noServices}</p>
