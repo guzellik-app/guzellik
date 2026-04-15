@@ -94,7 +94,7 @@ function ListingDetailContent() {
         if (servicesError) throw servicesError;
         
         // Fetch clinic settings to get the username, city
-        const { data: clinicsData, error: clinicsError } = await supabase.from('clinic_settings').select('id, username, city');
+        const { data: clinicsData, error: clinicsError } = await supabase.from('clinic_settings').select('id, username, city, profile_picture');
         if (clinicsError) throw clinicsError;
         
         const clinicMap = new Map(clinicsData?.map(c => [c.id, c]) || []);
@@ -121,7 +121,7 @@ function ListingDetailContent() {
             ) : ''],
             price: parseInt((s.price || '0').toString().replace(/[^0-9]/g, ''), 10) || 0,
             image: s.image || "https://images.unsplash.com/photo-1633681926022-84c23e8cb2d6?auto=format&fit=crop&q=80&w=600&h=400",
-            logo: s.image,
+            logo: clinicInfo.profile_picture || s.image,
             coverImage: s.image,
             website: '',
             socialMedia: {},
