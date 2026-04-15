@@ -1496,12 +1496,16 @@ function ClinicSettings() {
         </Card>
 
         <div className="flex justify-end -mb-6">
-          <Button variant="link" asChild className="text-blue hover:text-blue/80 font-medium h-auto p-0">
-            <Link to={`/mt/${profile.username || ''}`} target="_blank" className="flex items-center">
-              <ExternalLink className="mr-1.5 h-4 w-4" />
-              {t.dashboard.viewProfile}
-            </Link>
-          </Button>
+          <Button 
+            variant="link" 
+            className="text-blue hover:text-blue/80 font-medium h-auto p-0"
+            render={
+              <Link to={`/mt/${profile.username || ''}`} target="_blank" className="flex items-center">
+                <ExternalLink className="mr-1.5 h-4 w-4" />
+                {t.dashboard.viewProfile}
+              </Link>
+            }
+          />
         </div>
         
         <div className="flex justify-between items-center mt-8 pt-6 border-t">
