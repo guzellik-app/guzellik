@@ -241,18 +241,18 @@ function SearchResultsContent() {
             <div className="hidden md:block w-[280px] shrink-0" />
             <div className="flex-1">
               <div className="relative w-full">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
                 <input 
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
-                  placeholder={t.hero.searchPlaceholder || "Search clinics or services..."}
-                  className="w-full py-2.5 pr-10 pl-10 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:bg-white"
+                  placeholder={t.hero.searchPlaceholder || "Search Beauty Center"}
+                  className="w-full py-2.5 pr-10 pl-4 border-[1.5px] border-gray-200 rounded-2xl font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:bg-white"
                 />
+                <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
                 {searchQuery && (
                   <button 
                     onClick={() => setSearchQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                    className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
@@ -284,7 +284,7 @@ function SearchResultsContent() {
             paddingTop: isFilterDrawerOpen ? '60px' : '0',
             paddingBottom: isFilterDrawerOpen ? '100px' : '0'
           }}>
-            <div className="h-full bg-white border-r border-gray-200 md:border md:rounded-xl p-5 shadow-sm overflow-y-auto">
+            <div className="h-full bg-white border-r border-gray-200 md:border md:rounded-2xl p-5 shadow-sm overflow-y-auto">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
                 <div className="flex items-center gap-2 font-semibold text-navy">
                   <Filter className="w-4 h-4 text-blue" />
@@ -486,10 +486,12 @@ function SearchResultsContent() {
                         <div className="flex items-center justify-between pt-2 md:pt-4 border-t border-gray-100 mt-2 pointer-events-auto">
                           <div className="text-[0.7rem] md:text-[0.85rem] text-gray-400 font-medium flex items-center gap-1 sm:gap-1.5">
                             <MapPin className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" /> 
-                            <span className="line-clamp-1">{clinic.city}, {t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}</span>
+                            <span className="line-clamp-1">{clinic.city}{clinic.countryKey !== 'turkey' ? `, ${t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}` : ''}</span>
                           </div>
                           <div className="text-right shrink-0">
-                            <span className="text-[1rem] md:text-[1.2rem] lg:text-[1.4rem] font-bold text-navy">{clinic.price.toLocaleString()} €</span>
+                            {clinic.price > 0 && (
+                              <span className="text-[1rem] md:text-[1.2rem] lg:text-[1.4rem] font-bold text-navy">{clinic.price.toLocaleString()} €</span>
+                            )}
                           </div>
                         </div>
                       </div>

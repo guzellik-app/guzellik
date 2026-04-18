@@ -192,10 +192,12 @@ export function Clinics({ onOpenModal }: { onOpenModal: () => void }) {
                 <div className="flex items-center justify-between pt-2 md:pt-4 border-t border-gray-100 mt-2 pointer-events-auto">
                   <div className="text-[0.7rem] md:text-[0.85rem] text-gray-400 font-medium flex items-center gap-1 sm:gap-1.5">
                     <MapPin className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" /> 
-                    <span className="line-clamp-1">{clinic.city}, {t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}</span>
+                    <span className="line-clamp-1">{clinic.city}{clinic.countryKey !== 'turkey' ? `, ${t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}` : ''}</span>
                   </div>
                   <div className="text-right shrink-0">
-                    <span className="text-[1rem] md:text-[1.2rem] lg:text-[1.4rem] font-bold text-navy">{clinic.price.toLocaleString()} €</span>
+                    {clinic.price > 0 && (
+                      <span className="text-[1rem] md:text-[1.2rem] lg:text-[1.4rem] font-bold text-navy">{clinic.price.toLocaleString()} €</span>
+                    )}
                   </div>
                 </div>
               </div>

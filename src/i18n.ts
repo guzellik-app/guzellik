@@ -30,7 +30,8 @@ export const translations = {
         dentalAesthetics: "Dental Aesthetics",
         eyelidSurgery: "Eyelid Surgery"
       },
-      locationPlaceholder: "e.g. Istanbul, Turkey",
+      searchPlaceholder: "Search Beauty Center",
+      locationPlaceholder: "e.g. Istanbul",
       locations: {
         germany: "Germany",
         turkey: "Turkey",
@@ -202,11 +203,15 @@ export const translations = {
     clinicProfile: {
       search: "Search",
       reviews: "Reviews",
-      aboutClinic: "About the Clinic",
+      about: "About",
+      posts: "Posts",
+      newPost: "New Post",
+      editProfile: "Edit Profile",
       clinicListings: "Clinic Listings",
       noServices: "No services listed yet.",
       viewDetails: "View Details",
       contactInfo: "Contact Information",
+      contactLocation: "Contact & Location",
       address: "Address",
       workingHours: "Working Hours"
     },
@@ -465,7 +470,8 @@ export const translations = {
         dentalAesthetics: "Zahnästhetik",
         eyelidSurgery: "Augenlidkorrektur"
       },
-      locationPlaceholder: "z.B. Istanbul, Türkei",
+      searchPlaceholder: "Güzellik Merkezi Ara",
+      locationPlaceholder: "z.B. Istanbul",
       locations: {
         germany: "Deutschland",
         turkey: "Türkei",
@@ -637,11 +643,15 @@ export const translations = {
     clinicProfile: {
       search: "Suche",
       reviews: "Bewertungen",
-      aboutClinic: "Über die Klinik",
+      about: "Über uns",
+      posts: "Beiträge",
+      newPost: "Neuer Beitrag",
+      editProfile: "Profil bearbeiten",
       clinicListings: "Klinikangebote",
       noServices: "Noch keine Services gelistet.",
       viewDetails: "Details ansehen",
       contactInfo: "Kontaktinformationen",
+      contactLocation: "Kontakt & Standort",
       address: "Adresse",
       workingHours: "Arbeitszeiten"
     },
@@ -900,7 +910,8 @@ export const translations = {
         dentalAesthetics: "Diş Estetiği",
         eyelidSurgery: "Göz Kapağı Estetiği"
       },
-      locationPlaceholder: "örn. İstanbul, Türkiye",
+      searchPlaceholder: "Güzellik Merkezi Ara",
+      locationPlaceholder: "örn. İstanbul",
       locations: {
         germany: "Almanya",
         turkey: "Türkiye",
@@ -1072,11 +1083,15 @@ export const translations = {
     clinicProfile: {
       search: "Arama",
       reviews: "Yorumlar",
-      aboutClinic: "Klinik Hakkında",
+      about: "Hakkında",
+      posts: "Gönderiler",
+      newPost: "Yeni Gönderi",
+      editProfile: "Profili Düzenle",
       clinicListings: "Klinik İlanları",
       noServices: "Henüz listelenen hizmet yok.",
       viewDetails: "Detayları Görüntüle",
       contactInfo: "İletişim Bilgileri",
+      contactLocation: "İletişim ve Konum",
       address: "Adres",
       workingHours: "Çalışma Saatleri"
     },

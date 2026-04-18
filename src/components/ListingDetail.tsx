@@ -249,7 +249,7 @@ function ListingDetailContent() {
           <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.85rem] text-gray-500 mb-4">
             <div className="flex items-center gap-1.5">
               <MapPin className="w-3.5 h-3.5 text-blue" />
-              <span>{clinic.city}, {t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}</span>
+              <span>{clinic.city}{clinic.countryKey !== 'turkey' ? `, ${t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}` : ''}</span>
             </div>
 
             <div className="w-px h-3 bg-gray-300 hidden sm:block"></div>
@@ -303,10 +303,12 @@ function ListingDetailContent() {
                 ))}
               </div>
 
-              <div className="flex flex-col items-end">
-                <div className="text-[0.8rem] text-gray-500 mb-1">{t.listingDetail.startingFrom}</div>
-                <div className="text-3xl font-bold text-navy">€{clinic.price.toLocaleString()}</div>
-              </div>
+              {clinic.price > 0 && (
+                <div className="flex flex-col items-end">
+                  <div className="text-[0.8rem] text-gray-500 mb-1">{t.listingDetail.startingFrom}</div>
+                  <div className="text-3xl font-bold text-navy">€{clinic.price.toLocaleString()}</div>
+                </div>
+              )}
             </div>
           </div>
 

@@ -67,18 +67,18 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
                 )}
               </div>
               <div className="relative">
-                <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
                 <input 
                   type="text"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder={t.hero.searchPlaceholder || "Search clinics or services..."}
-                  className="w-full py-3 pr-10 pl-9 border-[1.5px] border-gray-200 rounded-md font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:shadow-[0_0_0_3px_rgba(45,107,228,0.12)] focus:bg-white"
+                  placeholder={t.hero.searchPlaceholder || "Search Beauty Center"}
+                  className="w-full py-3 pr-10 pl-4 border-[1.5px] border-gray-200 rounded-2xl font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:shadow-[0_0_0_3px_rgba(45,107,228,0.12)] focus:bg-white"
                 />
+                <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
                 {query && (
                   <button 
                     onClick={() => setQuery('')}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
+                    className="absolute right-10 top-1/2 -translate-y-1/2 text-gray-400 hover:text-navy transition-colors"
                   >
                     <X className="w-4 h-4" />
                   </button>
