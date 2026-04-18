@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Heart, MapPin, Star, CheckCircle2 } from 'lucide-react';
+import { Heart, MapPin, Star } from 'lucide-react';
+import { VerifiedBadge } from './VerifiedBadge';
 import { useI18n } from '../I18nContext';
 import { MOCK_CLINICS } from '../data/clinics';
 
@@ -184,7 +185,7 @@ export function Clinics({ onOpenModal }: { onOpenModal: () => void }) {
                     onClick={(e) => e.stopPropagation()}
                   >
                     <span>@{clinic.clinicSlug || clinic.slug}</span>
-                    {clinic.isVerified && <CheckCircle2 className="w-3 h-3 md:w-3.5 md:h-3.5 text-[#0095f6] fill-[#0095f6] text-white brightness-110" />}
+                    {clinic.isVerified && <VerifiedBadge className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" />}
                   </Link>
                   <div className="text-[1rem] md:text-[1.2rem] lg:text-[1.35rem] font-semibold text-navy mb-1 md:mb-2 line-clamp-1">{clinic.name}</div>
                   <div className="flex items-center gap-1.5 md:gap-2">

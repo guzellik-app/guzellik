@@ -33,6 +33,7 @@ import {
   Send,
   ExternalLink
 } from 'lucide-react';
+import { VerifiedBadge } from './VerifiedBadge';
 import { useI18n, I18nProvider } from '../I18nContext';
 import { Language } from '../i18n';
 
@@ -2190,7 +2191,7 @@ function AdminClinicsList() {
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
                           {settings?.clinic_name || clinic.full_name || t.dashboard.unnamedClinic}
-                          {isVerified && <CheckCircle2 className="w-4 h-4 text-blue fill-white" />}
+                          {isVerified && <VerifiedBadge className="w-4 h-4" />}
                         </div>
                       </TableCell>
                       <TableCell>{settings?.city || settings?.address || t.dashboard.unknown}</TableCell>
@@ -2329,7 +2330,7 @@ function AdminPatientsList() {
                     <TableCell className="font-medium">
                       <div className="flex items-center gap-2">
                         {patient.full_name || t.dashboard.unnamedPatient}
-                        {patient.is_verified && <CheckCircle2 className="w-4 h-4 text-blue fill-white" />}
+                        {patient.is_verified && <VerifiedBadge className="w-4 h-4" />}
                       </div>
                     </TableCell>
                     <TableCell>{patient.email || '-'}</TableCell>

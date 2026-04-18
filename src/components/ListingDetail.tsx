@@ -21,6 +21,7 @@ import {
   Award,
   Heart
 } from 'lucide-react';
+import { VerifiedBadge } from './VerifiedBadge';
 
 function ListingDetailContent() {
   const { slug } = useParams();
@@ -93,10 +94,14 @@ function ListingDetailContent() {
         const { data: servicesData, error: servicesError } = await supabase.from('services').select('*');
         if (servicesError) throw servicesError;
         
-        // Fetch clinic settings to get the username, city
+        // Fetch clinic settings and profiles to get the username, city, and verification status
         const { data: clinicsData, error: clinicsError } = await supabase.from('clinic_settings').select('id, username, city, profile_picture');
         if (clinicsError) throw clinicsError;
+
+        const { data: profilesData, error: profilesError } = await supabase.from('profiles').select('id, is_verified');
+        if (profilesError) throw profilesError;
         
+        const profileMap = new Map(profilesData?.map(p => [p.id, p.is_verified]) || []);
         const clinicMap = new Map(clinicsData?.map(c => [c.id, c]) || []);
         
         if (servicesData) {
@@ -107,6 +112,7 @@ function ListingDetailContent() {
             name: s.name,
             slug: s.name ? s.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '') : `service-${s.id}`,
             clinicSlug: clinicInfo.username || `clinic-${s.clinic_id}`,
+            isVerified: profileMap.get(s.clinic_id) || false,
             clinic_id: s.clinic_id,
             city: clinicInfo.city || 'Unknown',
             countryKey: 'turkey',
@@ -276,6 +282,17 @@ function ListingDetailContent() {
 
           {/* Divider Line */}
           <div className="h-px bg-gray-200 w-full mb-8"></div>
+
+          {/* @username and Verified Badge */}
+          <div className="flex items-center gap-1.5 mb-2 px-1">
+            <Link 
+              to={`/${lang === 'en' ? '' : lang + '/'}mt/${clinic.clinicSlug || clinic.slug}`}
+              className="text-gray-900 font-bold text-[0.9rem] sm:text-[1rem] hover:text-blue transition-all"
+            >
+              @{clinic.clinicSlug || clinic.slug}
+            </Link>
+            {clinic.isVerified && <VerifiedBadge className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />}
+          </div>
 
           {/* Title and Price Section */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">

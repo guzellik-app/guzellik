@@ -21,9 +21,9 @@ import {
   Heart,
   Plus,
   Settings,
-  CheckCircle2,
   AlertTriangle
 } from 'lucide-react';
+import { VerifiedBadge } from './VerifiedBadge';
 
 function ClinicProfileContent() {
   const { slug } = useParams();
@@ -200,7 +200,7 @@ function ClinicProfileContent() {
                   <div className="w-full">
                     <div className="flex items-center gap-1.5 mb-1.5">
                       <div className="text-gray-900 font-bold text-[0.8rem] sm:text-[1rem] tracking-wider">@{clinic.slug}</div>
-                      {clinic.isVerified && <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#0095f6] fill-[#0095f6] text-white shrink-0" />}
+                      {clinic.isVerified && <VerifiedBadge className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />}
                     </div>
                     <h1 className="font-nunito text-2xl sm:text-4xl md:text-5xl font-medium text-navy mb-1.5 sm:mb-3 leading-[1.1] break-words tracking-tight">
                       {clinic.name}
@@ -242,6 +242,11 @@ function ClinicProfileContent() {
               <p className="text-gray-600 leading-relaxed text-[0.9rem] sm:text-[1rem]">
                 {clinic.description}
               </p>
+            </div>
+
+            <div className="flex items-center gap-1.5 mb-1 sm:mb-2">
+              <span className="text-gray-900 font-bold text-[0.9rem] sm:text-[1.1rem]">@{clinic.slug}</span>
+              {clinic.isVerified && <VerifiedBadge className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />}
             </div>
           </div>
         </section>
