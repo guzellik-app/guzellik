@@ -149,9 +149,9 @@ function ClinicProfileContent() {
       
       <main className="flex-grow pb-24">
         {/* Unified White Top Section */}
-        <section className="bg-white border-b border-gray-100 pt-28 sm:pt-36 pb-12">
+        <section className="bg-white border-b border-gray-100 pt-20 sm:pt-28 pb-6 sm:pb-8">
           <div className="max-w-[1200px] mx-auto px-[5vw]">
-            <div className="flex flex-row gap-5 sm:gap-10 items-start mb-10 sm:mb-12">
+            <div className="flex flex-row gap-5 sm:gap-10 items-start mb-4 sm:mb-5">
               <div className="w-28 h-28 sm:w-44 sm:h-44 md:w-56 md:h-56 shrink-0 rounded-full overflow-hidden border-2 md:border-4 border-white bg-white shadow-md">
                 <img 
                   src={clinic.logo} 
@@ -164,11 +164,11 @@ function ClinicProfileContent() {
               <div className="flex-grow min-w-0 pt-2 sm:pt-6">
                 <div className="flex flex-col justify-between items-start gap-1 sm:gap-3 mb-5 sm:mb-6">
                   <div className="w-full">
-                    <div className="text-blue font-bold text-[0.8rem] sm:text-[1rem] mb-1.5 tracking-wider uppercase">@{clinic.slug}</div>
-                    <h1 className="font-nunito text-2xl sm:text-5xl md:text-7xl font-extrabold text-navy mb-1.5 sm:mb-3 leading-[1.1] break-words tracking-tight">
+                    <div className="text-blue font-bold text-[0.8rem] sm:text-[1rem] mb-1.5 tracking-wider">@{clinic.slug}</div>
+                    <h1 className="font-nunito text-2xl sm:text-4xl md:text-5xl font-medium text-navy mb-1.5 sm:mb-3 leading-[1.1] break-words tracking-tight">
                       {clinic.name}
                     </h1>
-                    <div className="text-gray-500 font-semibold text-[0.95rem] sm:text-[1.2rem] mb-4">{clinic.type}</div>
+                    <div className="text-gray-500 text-[0.95rem] sm:text-[1.2rem] mb-4">{clinic.type}</div>
                     
                     <div className="flex items-center gap-2 text-gray-400 text-[0.85rem] sm:text-[1.1rem]">
                       <MapPin className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
@@ -200,7 +200,7 @@ function ClinicProfileContent() {
             </div>
 
             {/* About Section */}
-            <div className="max-w-2xl mb-8">
+            <div className="max-w-2xl mb-4 sm:mb-6">
               <h2 className="text-lg sm:text-xl font-serif font-medium text-navy mb-2 sm:mb-3">{t.clinicProfile.about}</h2>
               <p className="text-gray-600 leading-relaxed text-[0.9rem] sm:text-[1rem]">
                 {clinic.description}
@@ -211,10 +211,10 @@ function ClinicProfileContent() {
 
         <div className="max-w-[1200px] mx-auto px-[5vw]">
           {/* Tabs Navigation - Connected to content */}
-          <div className="flex gap-2 p-1.5 bg-gray-50 rounded-2xl w-fit overflow-x-auto no-scrollbar border border-gray-100 mb-8 sticky top-[80px] z-10 shadow-sm">
+          <div className="flex gap-2 p-1.5 bg-gray-50 rounded-2xl w-full sm:w-fit overflow-x-auto no-scrollbar border border-gray-100 mb-4 sm:mb-6 sticky top-[80px] z-10 shadow-sm transition-all duration-300">
             <button 
               onClick={() => setActiveTab('posts')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 ${
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 ${
                 activeTab === 'posts' 
                 ? 'bg-white text-blue shadow-sm ring-1 ring-black/5' 
                 : 'text-gray-500 hover:text-navy hover:bg-gray-100'
@@ -224,7 +224,7 @@ function ClinicProfileContent() {
             </button>
             <button 
               onClick={() => setActiveTab('reviews')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 ${
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 ${
                 activeTab === 'reviews' 
                 ? 'bg-white text-blue shadow-sm ring-1 ring-black/5' 
                 : 'text-gray-500 hover:text-navy hover:bg-gray-100'
@@ -236,13 +236,17 @@ function ClinicProfileContent() {
             </button>
             <button 
               onClick={() => setActiveTab('contact')}
-              className={`flex items-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 ${
+              className={`flex-[1.5] sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl text-sm font-semibold transition-all shrink-0 ${
                 activeTab === 'contact' 
                 ? 'bg-white text-blue shadow-sm ring-1 ring-black/5' 
                 : 'text-gray-500 hover:text-navy hover:bg-gray-100'
               }`}
             >
-              {t.clinicProfile.contactLocation}
+              <div className="flex items-center gap-1.5 sm:gap-2">
+                <Phone className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                <MapPin className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+              </div>
+              <span className="hidden sm:inline">{t.clinicProfile.contactLocation}</span>
             </button>
           </div>
 
