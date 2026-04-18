@@ -12,6 +12,8 @@ create table public.profiles (
   role text not null default 'patient' check (role in ('patient', 'clinic', 'admin')),
   full_name text,
   email text,
+  is_verified boolean not null default false,
+  is_active boolean not null default true,
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
@@ -25,6 +27,14 @@ create policy "Users can insert their own profile."
 
 create policy "Users can update own profile."
   on public.profiles for update using ( auth.uid() = id );
+
+create policy "Admins can update and manage all profiles."
+  on public.profiles for update using (
+    exists (
+      select 1 from public.profiles
+      where id = auth.uid() and role = 'admin'
+    )
+  );
 
 -- 2. Bulletproof Trigger for automatic profile creation
 create or replace function public.handle_new_user()
@@ -81,6 +91,22 @@ create policy "Clinics can insert their own settings."
 
 create policy "Clinics can update own settings."
   on public.clinic_settings for update using ( auth.uid() = id );
+
+create policy "Admins can manage all clinic settings."
+  on public.clinic_settings for update using (
+    exists (
+      select 1 from public.profiles
+      where id = auth.uid() and role = 'admin'
+    )
+  );
+
+create policy "Admins can insert clinic settings."
+  on public.clinic_settings for insert with check (
+    exists (
+      select 1 from public.profiles
+      where id = auth.uid() and role = 'admin'
+    )
+  );
 
 -- 4. Services Table
 create table public.services (

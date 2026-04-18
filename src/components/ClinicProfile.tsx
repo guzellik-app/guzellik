@@ -20,7 +20,9 @@ import {
   Twitter,
   Heart,
   Plus,
-  Settings
+  Settings,
+  CheckCircle2,
+  AlertTriangle
 } from 'lucide-react';
 
 function ClinicProfileContent() {
@@ -67,6 +69,13 @@ function ClinicProfileContent() {
         if (clinicError) throw clinicError;
         
         if (clinicData) {
+          // Fetch profile info separately since there's no direct FK
+          const { data: profile } = await supabase
+            .from('profiles')
+            .select('is_verified, is_active')
+            .eq('id', clinicData.id)
+            .single();
+          
           setClinic({
             id: clinicData.id,
             name: clinicData.clinic_name || 'Unnamed Clinic',
@@ -83,6 +92,8 @@ function ClinicProfileContent() {
             type: 'Premium',
             badge: 'premium',
             description: clinicData.description || 'No description provided.',
+            isVerified: profile?.is_verified ?? false,
+            isActive: profile?.is_active ?? true,
             contact: { 
               phone: clinicData.phone || '', 
               email: '', 
@@ -143,6 +154,29 @@ function ClinicProfileContent() {
     return <Navigate to={`/${lang === 'en' ? '' : lang + '/'}chatmt`} replace />;
   }
 
+  if (!clinic.isActive) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex flex-col">
+        <Navbar onOpenModal={() => setIsModalOpen(true)} />
+        <main className="flex-grow max-w-7xl mx-auto px-4 py-20">
+          <div className="bg-white rounded-2xl shadow-sm p-12 text-center border">
+            <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+              <AlertTriangle className="w-8 h-8" />
+            </div>
+            <h1 className="text-2xl font-bold text-navy mb-2">Profile Inactive</h1>
+            <p className="text-gray-500 max-w-md mx-auto">
+              This profile has been deactivated by the administrator and is currently not visible to the public.
+            </p>
+            <Link to="/" className="inline-block mt-8 text-blue font-medium hover:underline">
+              Return to Homepage
+            </Link>
+          </div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-white font-sans selection:bg-blue/20 selection:text-navy flex flex-col">
       <Navbar onOpenModal={() => setIsModalOpen(true)} />
@@ -164,7 +198,10 @@ function ClinicProfileContent() {
               <div className="flex-grow min-w-0 pt-2 sm:pt-6">
                 <div className="flex flex-col justify-between items-start gap-1 sm:gap-3 mb-5 sm:mb-6">
                   <div className="w-full">
-                    <div className="text-blue font-bold text-[0.8rem] sm:text-[1rem] mb-1.5 tracking-wider">@{clinic.slug}</div>
+                    <div className="flex items-center gap-1.5 mb-1.5">
+                      <div className="text-gray-900 font-bold text-[0.8rem] sm:text-[1rem] tracking-wider">@{clinic.slug}</div>
+                      {clinic.isVerified && <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-[#0095f6] fill-[#0095f6] text-white shrink-0" />}
+                    </div>
                     <h1 className="font-nunito text-2xl sm:text-4xl md:text-5xl font-medium text-navy mb-1.5 sm:mb-3 leading-[1.1] break-words tracking-tight">
                       {clinic.name}
                     </h1>

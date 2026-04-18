@@ -2093,27 +2093,63 @@ function MyRequests({ role }: { role: Role }) {
 function AdminClinicsList() {
   const [clinics, setClinics] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
   const { lang, t } = useI18n();
   const langPrefix = lang === 'en' ? '' : `/${lang}`;
 
+  const fetchClinics = async () => {
+    try {
+      // First fetch all profiles with role clinic
+      const { data: profiles, error: profilesError } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('role', 'clinic')
+        .order('created_at', { ascending: false });
+      
+      if (profilesError) throw profilesError;
+
+      // Then fetch their clinic settings
+      const { data: settings, error: settingsError } = await supabase
+        .from('clinic_settings')
+        .select('*');
+      
+      if (settingsError) throw settingsError;
+
+      // Merge the data
+      const mergedClinics = (profiles || []).map(profile => ({
+        ...profile,
+        clinic_settings: settings?.find(s => s.id === profile.id) || null
+      }));
+
+      setClinics(mergedClinics);
+    } catch (err: any) {
+      console.error('Error fetching clinics:', err);
+      alert(`Error fetching clinics: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   React.useEffect(() => {
-    const fetchClinics = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('clinic_settings')
-          .select('*')
-          .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        setClinics(data || []);
-      } catch (err) {
-        console.error('Error fetching clinics:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchClinics();
   }, []);
+
+  const toggleStatus = async (userId: string, currentStatus: boolean, field: 'is_active' | 'is_verified') => {
+    setUpdatingId(userId);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ [field]: !currentStatus })
+        .eq('id', userId);
+
+      if (error) throw error;
+      await fetchClinics();
+    } catch (err: any) {
+      alert(`Error updating clinic: ${err.message}`);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -2139,30 +2175,67 @@ function AdminClinicsList() {
                   <TableHead>{t.dashboard.tableLocation}</TableHead>
                   <TableHead>{t.dashboard.tableUsername}</TableHead>
                   <TableHead>{t.dashboard.tableStatus}</TableHead>
+                  <TableHead>Verification</TableHead>
                   <TableHead className="text-right">{t.dashboard.tableActions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {clinics.map((clinic) => (
-                  <TableRow key={clinic.id}>
-                    <TableCell className="font-medium">{clinic.clinic_name || t.dashboard.unnamedClinic}</TableCell>
-                    <TableCell>{clinic.city || clinic.address || t.dashboard.unknown}</TableCell>
-                    <TableCell>{clinic.username || '-'}</TableCell>
-                    <TableCell>
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                        {t.dashboard.active}
-                      </span>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <Link to={`${langPrefix}/mt/${clinic.username || clinic.id}`}>
-                        <Button variant="ghost" size="sm">{t.dashboard.view}</Button>
-                      </Link>
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {clinics.map((clinic) => {
+                  const isActive = clinic.is_active ?? true;
+                  const isVerified = clinic.is_verified ?? false;
+                  const settings = clinic.clinic_settings;
+
+                  return (
+                    <TableRow key={clinic.id}>
+                      <TableCell className="font-medium">
+                        <div className="flex items-center gap-2">
+                          {settings?.clinic_name || clinic.full_name || t.dashboard.unnamedClinic}
+                          {isVerified && <CheckCircle2 className="w-4 h-4 text-blue fill-white" />}
+                        </div>
+                      </TableCell>
+                      <TableCell>{settings?.city || settings?.address || t.dashboard.unknown}</TableCell>
+                      <TableCell>{settings?.username || '-'}</TableCell>
+                      <TableCell>
+                        <Badge variant={isActive ? "default" : "destructive"}>
+                          {isActive ? t.dashboard.active : "Deactivated"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant={isVerified ? "secondary" : "outline"} className={isVerified ? "bg-blue/10 text-blue border-blue/20" : ""}>
+                          {isVerified ? "Verified" : "Unverified"}
+                        </Badge>
+                      </TableCell>
+                      <TableCell className="text-right">
+                        <div className="flex justify-end gap-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            disabled={updatingId === clinic.id}
+                            onClick={() => toggleStatus(clinic.id, isVerified, 'is_verified')}
+                          >
+                            {isVerified ? "Unverify" : "Verify"}
+                          </Button>
+                          <Button 
+                            variant={isActive ? "destructive" : "default"} 
+                            size="sm" 
+                            disabled={updatingId === clinic.id}
+                            onClick={() => toggleStatus(clinic.id, isActive, 'is_active')}
+                          >
+                            {isActive ? "Deactivate" : "Activate"}
+                          </Button>
+                          {settings?.username && (
+                            <Link to={`${langPrefix}/mt/${settings.username}`}>
+                              <Button variant="ghost" size="sm">{t.dashboard.view}</Button>
+                            </Link>
+                          )}
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
                 {clinics.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                       {t.dashboard.noClinicsFound}
                     </TableCell>
                   </TableRow>
@@ -2179,27 +2252,48 @@ function AdminClinicsList() {
 function AdminPatientsList() {
   const [patients, setPatients] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [updatingId, setUpdatingId] = useState<string | null>(null);
   const { t } = useI18n();
 
+  const fetchPatients = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('*')
+        .eq('role', 'patient')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      console.log('Fetched patients:', data);
+      setPatients(data || []);
+    } catch (err: any) {
+      console.error('Error fetching patients:', err);
+      alert(`Error fetching patients: ${err.message}`);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   React.useEffect(() => {
-    const fetchPatients = async () => {
-      try {
-        const { data, error } = await supabase
-          .from('profiles')
-          .select('*')
-          .eq('role', 'patient')
-          .order('created_at', { ascending: false });
-        
-        if (error) throw error;
-        setPatients(data || []);
-      } catch (err) {
-        console.error('Error fetching patients:', err);
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchPatients();
   }, []);
+
+  const toggleStatus = async (userId: string, currentStatus: boolean, field: 'is_active' | 'is_verified') => {
+    setUpdatingId(userId);
+    try {
+      const { error } = await supabase
+        .from('profiles')
+        .update({ [field]: !currentStatus })
+        .eq('id', userId);
+
+      if (error) throw error;
+      await fetchPatients();
+    } catch (err: any) {
+      alert(`Error updating patient: ${err.message}`);
+    } finally {
+      setUpdatingId(null);
+    }
+  };
 
   return (
     <div className="space-y-6">
@@ -2225,30 +2319,59 @@ function AdminPatientsList() {
                   <TableHead>{t.dashboard.tableEmail}</TableHead>
                   <TableHead>{t.dashboard.tableJoined}</TableHead>
                   <TableHead>{t.dashboard.tableStatus}</TableHead>
+                  <TableHead>Verification</TableHead>
                   <TableHead className="text-right">{t.dashboard.tableActions}</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {patients.map((patient) => (
                   <TableRow key={patient.id}>
-                    <TableCell className="font-medium">{patient.full_name || t.dashboard.unnamedPatient}</TableCell>
+                    <TableCell className="font-medium">
+                      <div className="flex items-center gap-2">
+                        {patient.full_name || t.dashboard.unnamedPatient}
+                        {patient.is_verified && <CheckCircle2 className="w-4 h-4 text-blue fill-white" />}
+                      </div>
+                    </TableCell>
                     <TableCell>{patient.email || '-'}</TableCell>
                     <TableCell>{new Date(patient.created_at).toLocaleDateString()}</TableCell>
                     <TableCell>
-                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                        {t.dashboard.active}
-                      </span>
+                      <Badge variant={patient.is_active ? "default" : "destructive"}>
+                        {patient.is_active ? t.dashboard.active : "Deactivated"}
+                      </Badge>
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant={patient.is_verified ? "secondary" : "outline"} className={patient.is_verified ? "bg-blue/10 text-blue border-blue/20" : ""}>
+                        {patient.is_verified ? "Verified" : "Unverified"}
+                      </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" onClick={() => window.location.href = `mailto:${patient.email}`}>
-                        {t.dashboard.contact}
-                      </Button>
+                      <div className="flex justify-end gap-2">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          disabled={updatingId === patient.id}
+                          onClick={() => toggleStatus(patient.id, patient.is_verified, 'is_verified')}
+                        >
+                          {patient.is_verified ? "Unverify" : "Verify"}
+                        </Button>
+                        <Button 
+                          variant={patient.is_active ? "destructive" : "default"} 
+                          size="sm" 
+                          disabled={updatingId === patient.id}
+                          onClick={() => toggleStatus(patient.id, patient.is_active, 'is_active')}
+                        >
+                          {patient.is_active ? "Deactivate" : "Activate"}
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => window.location.href = `mailto:${patient.email}`}>
+                          {t.dashboard.contact}
+                        </Button>
+                      </div>
                     </TableCell>
                   </TableRow>
                 ))}
                 {patients.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={5} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
                       {t.dashboard.noPatientsFound}
                     </TableCell>
                   </TableRow>
@@ -2261,6 +2384,7 @@ function AdminPatientsList() {
     </div>
   );
 }
+
 
 function DashboardLayoutContent() {
   const location = useLocation();
@@ -2300,16 +2424,25 @@ function DashboardLayoutContent() {
         setIsAuthenticated(true);
         const user = session.user;
 
+        // Check if user is active
+        const { data: currentProfile } = await supabase.from('profiles').select('role, is_active').eq('id', user.id).single();
+        if (currentProfile && !currentProfile.is_active) {
+          await supabase.auth.signOut();
+          localStorage.removeItem('userRole');
+          alert("Your account has been deactivated by the administrator.");
+          navigate(langPrefix + '/');
+          return;
+        }
+
         // Now ensure admin status if applicable
         if (user && (user.email === 'turkishmag.com@gmail.com' || user.email === 'app.guzellik@gmail.com')) {
-          const { data: profile } = await supabase.from('profiles').select('role').eq('id', user.id).single();
-          
-          if (isMounted && (!profile || profile.role !== 'admin')) {
+          if (isMounted && (!currentProfile || currentProfile.role !== 'admin')) {
             await supabase.from('profiles').upsert({ 
               id: user.id, 
               role: 'admin', 
               email: user.email,
-              full_name: user.user_metadata?.full_name || 'Admin'
+              full_name: user.user_metadata?.full_name || 'Admin',
+              is_active: true
             });
             console.log('Successfully set user as admin in database');
           }

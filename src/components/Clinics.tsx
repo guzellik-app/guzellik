@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Heart, MapPin, Star } from 'lucide-react';
+import { Heart, MapPin, Star, CheckCircle2 } from 'lucide-react';
 import { useI18n } from '../I18nContext';
 import { MOCK_CLINICS } from '../data/clinics';
 
@@ -25,12 +25,18 @@ export function Clinics({ onOpenModal }: { onOpenModal: () => void }) {
         // Fetch clinic settings to get the username, city
         const { data: clinicsData, error: clinicsError } = await supabase.from('clinic_settings').select('id, username, city');
         if (clinicsError) throw clinicsError;
+
+        // Fetch verification status from profiles
+        const { data: profilesData, error: profilesError } = await supabase.from('profiles').select('id, is_verified');
+        if (profilesError) throw profilesError;
         
         const clinicMap = new Map(clinicsData?.map(c => [c.id, c]) || []);
+        const profileMap = new Map(profilesData?.map(p => [p.id, p]) || []);
         
         if (servicesData) {
           const mappedServices = servicesData.map((s: any) => {
             const clinicInfo = (clinicMap.get(s.clinic_id) || {}) as any;
+            const profileInfo = (profileMap.get(s.clinic_id) || {}) as any;
             return {
             id: `service-${s.id}`,
             name: s.name,
@@ -40,6 +46,7 @@ export function Clinics({ onOpenModal }: { onOpenModal: () => void }) {
             countryKey: 'turkey',
             rating: 5.0,
             reviews: 0,
+            isVerified: profileInfo.is_verified || false,
             procedures: [s.category ? (
               s.category === 'Breast Augmentation' ? 'breastAugmentation' :
               s.category === 'Hair Transplant' ? 'hairTransplant' :
@@ -173,10 +180,11 @@ export function Clinics({ onOpenModal }: { onOpenModal: () => void }) {
                 <div>
                   <Link 
                     to={`/${lang === 'en' ? '' : lang + '/'}mt/${clinic.clinicSlug || clinic.slug}`}
-                    className="text-[0.65rem] md:text-[0.75rem] font-medium text-blue hover:text-navy transition-colors pointer-events-auto block mb-0.5 md:mb-1 w-fit"
+                    className="text-[0.65rem] md:text-[0.75rem] font-medium text-gray-900 hover:text-blue transition-colors pointer-events-auto flex items-center gap-1 mb-0.5 md:mb-1 w-fit"
                     onClick={(e) => e.stopPropagation()}
                   >
-                    @{clinic.clinicSlug || clinic.slug}
+                    <span>@{clinic.clinicSlug || clinic.slug}</span>
+                    {clinic.isVerified && <CheckCircle2 className="w-3 h-3 md:w-3.5 md:h-3.5 text-[#0095f6] fill-[#0095f6] text-white brightness-110" />}
                   </Link>
                   <div className="text-[1rem] md:text-[1.2rem] lg:text-[1.35rem] font-semibold text-navy mb-1 md:mb-2 line-clamp-1">{clinic.name}</div>
                   <div className="flex items-center gap-1.5 md:gap-2">
