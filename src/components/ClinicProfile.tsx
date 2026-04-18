@@ -243,11 +243,6 @@ function ClinicProfileContent() {
                 {clinic.description}
               </p>
             </div>
-
-            <div className="flex items-center gap-1.5 mb-1 sm:mb-2">
-              <span className="text-gray-900 font-bold text-[0.9rem] sm:text-[1.1rem]">@{clinic.slug}</span>
-              {clinic.isVerified && <VerifiedBadge className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />}
-            </div>
           </div>
         </section>
 
