@@ -465,6 +465,13 @@ function SearchResultsContent() {
                       </div>
                       <div className="p-3 md:p-5 lg:p-6 flex-1 flex flex-col justify-between relative z-10 pointer-events-none">
                         <div>
+                          <Link 
+                            to={`/${lang === 'en' ? '' : lang + '/'}mt/${clinic.clinicSlug || clinic.slug}`}
+                            className="text-[0.65rem] md:text-[0.75rem] font-medium text-blue hover:text-navy transition-colors pointer-events-auto block mb-0.5 md:mb-1 w-fit"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            @{clinic.clinicSlug || clinic.slug}
+                          </Link>
                           <div className="text-[1rem] md:text-[1.2rem] lg:text-[1.35rem] font-semibold text-navy mb-1 md:mb-2 line-clamp-1">{clinic.name}</div>
                           <div className="flex items-center gap-1.5 md:gap-2">
                             <div className="flex text-gold">
