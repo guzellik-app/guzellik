@@ -149,10 +149,10 @@ function ClinicProfileContent() {
       
       <main className="flex-grow pb-24">
         {/* Unified White Top Section */}
-        <section className="bg-white border-b border-gray-100 pt-12 sm:pt-20 pb-10">
+        <section className="bg-white border-b border-gray-100 pt-28 sm:pt-36 pb-12">
           <div className="max-w-[1200px] mx-auto px-[5vw]">
-            <div className="flex flex-row gap-4 sm:gap-6 md:gap-8 items-start mb-6 sm:mb-8">
-              <div className="w-20 h-20 sm:w-32 sm:h-32 md:w-40 md:h-40 shrink-0 rounded-full overflow-hidden border-2 md:border-4 border-white bg-white shadow-sm">
+            <div className="flex flex-row gap-5 sm:gap-10 items-start mb-10 sm:mb-12">
+              <div className="w-28 h-28 sm:w-44 sm:h-44 md:w-56 md:h-56 shrink-0 rounded-full overflow-hidden border-2 md:border-4 border-white bg-white shadow-md">
                 <img 
                   src={clinic.logo} 
                   alt={`${clinic.name} logo`} 
@@ -161,17 +161,17 @@ function ClinicProfileContent() {
                 />
               </div>
               
-              <div className="flex-grow min-w-0 pt-1 sm:pt-2">
-                <div className="flex flex-col justify-between items-start gap-1 sm:gap-2 mb-3 sm:mb-4">
-                  <div className="min-w-0">
-                    <div className="text-blue font-semibold text-[0.75rem] sm:text-[0.9rem] mb-0.5">@{clinic.slug}</div>
-                    <h1 className="font-serif text-lg sm:text-3xl md:text-5xl font-medium text-navy mb-0.5 sm:mb-1 leading-tight break-words">
+              <div className="flex-grow min-w-0 pt-2 sm:pt-6">
+                <div className="flex flex-col justify-between items-start gap-1 sm:gap-3 mb-5 sm:mb-6">
+                  <div className="w-full">
+                    <div className="text-blue font-bold text-[0.8rem] sm:text-[1rem] mb-1.5 tracking-wider uppercase">@{clinic.slug}</div>
+                    <h1 className="font-nunito text-2xl sm:text-5xl md:text-7xl font-extrabold text-navy mb-1.5 sm:mb-3 leading-[1.1] break-words tracking-tight">
                       {clinic.name}
                     </h1>
-                    <div className="text-gray-500 font-medium text-[0.8rem] sm:text-[1rem] mb-2">{clinic.type}</div>
+                    <div className="text-gray-500 font-semibold text-[0.95rem] sm:text-[1.2rem] mb-4">{clinic.type}</div>
                     
-                    <div className="flex items-center gap-1.5 text-gray-500 text-[0.75rem] sm:text-[0.85rem]">
-                      <MapPin className="w-3 h-3 sm:w-3.5 sm:h-3.5 shrink-0" />
+                    <div className="flex items-center gap-2 text-gray-400 text-[0.85rem] sm:text-[1.1rem]">
+                      <MapPin className="w-4 h-4 sm:w-5 sm:h-5 shrink-0" />
                       <span className="truncate text-gray-400">
                         {clinic.city}{clinic.countryKey !== 'turkey' ? `, ${t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}` : ''}
                       </span>
