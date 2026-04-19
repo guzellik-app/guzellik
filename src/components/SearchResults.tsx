@@ -257,16 +257,16 @@ function SearchResultsContent() {
       <main className="flex-grow pt-[60px] pb-24">
         {/* Sticky Search Box */}
         <div className="sticky top-[60px] z-40 bg-white border-b border-gray-200 shadow-sm py-4 px-[5vw]">
-          <div className="max-w-[1200px] mx-auto flex flex-col md:flex-row gap-8">
+          <div className="max-w-[1200px] mx-auto flex items-center gap-3 md:gap-8">
             <div className="hidden md:block w-[280px] shrink-0" />
-            <div className="flex-1">
-              <div className="relative w-full">
+            <div className="flex-1 flex items-center gap-3">
+              <div className="flex-1 relative">
                 <input 
                   type="text"
                   value={searchQuery}
                   onChange={e => setSearchQuery(e.target.value)}
                   placeholder={t.hero.searchPlaceholder || "Search Beauty Center"}
-                  className="w-full py-2.5 pr-10 pl-4 border-[1.5px] border-gray-200 rounded-2xl font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:bg-white"
+                  className="w-full h-10 pr-10 pl-4 border-[1.5px] border-gray-200 rounded-2xl font-sans text-[0.88rem] text-text bg-off-white outline-none transition-all focus:border-blue focus:bg-white"
                 />
                 <Search className="absolute right-3.5 top-1/2 -translate-y-1/2 text-blue w-4 h-4 pointer-events-none" />
                 {searchQuery && (
@@ -278,6 +278,15 @@ function SearchResultsContent() {
                   </button>
                 )}
               </div>
+              
+              {/* Filter Toggle for Mobile */}
+              <button 
+                onClick={() => setIsFilterDrawerOpen(true)}
+                className="md:hidden flex h-10 items-center justify-center gap-2 px-4 bg-off-white border-[1.5px] border-gray-200 rounded-2xl text-[0.85rem] font-medium text-navy transition-all active:scale-95"
+              >
+                <Filter className="w-4 h-4 text-blue" />
+                <span className="hidden xs:inline">Filters</span>
+              </button>
             </div>
           </div>
         </div>
@@ -363,6 +372,26 @@ function SearchResultsContent() {
                   <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
                 </div>
               </div>
+
+              {/* Sort By Filter */}
+              <div className="mb-6">
+                <h4 className="text-[0.85rem] font-semibold text-gray-800 mb-3">Sort Results</h4>
+                <div className="relative">
+                  <List className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
+                  <select 
+                    value={sortBy}
+                    onChange={e => setSortBy(e.target.value)}
+                    className="w-full py-2 pr-3 pl-8 border border-gray-200 rounded-md font-sans text-[0.82rem] text-text bg-off-white outline-none appearance-none focus:border-blue focus:bg-white"
+                  >
+                    <option value="latest">{t.searchResults.latest}</option>
+                    <option value="recommended">{t.searchResults.recommended}</option>
+                    <option value="price-low">{t.searchResults.priceLowToHigh}</option>
+                    <option value="price-high">{t.searchResults.priceHighToLow}</option>
+                    <option value="rating">{t.searchResults.highestRated}</option>
+                  </select>
+                  <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 w-3.5 h-3.5 pointer-events-none" />
+                </div>
+              </div>
               
               <div className="mb-6">
                 <h4 className="text-[0.85rem] font-semibold text-gray-800 mb-3">{t.searchResults.rating}</h4>
@@ -424,32 +453,6 @@ function SearchResultsContent() {
 
           {/* Results List */}
           <div className="flex-1">
-            <div className="mb-6 flex items-center justify-between">
-              <h2 className="text-xl font-serif font-semibold text-navy hidden sm:block">
-                {filteredClinics.length} {t.searchResults.clinicsFound}
-              </h2>
-              <div className="flex items-center gap-2 w-full sm:w-auto">
-                <select 
-                  value={sortBy}
-                  onChange={e => setSortBy(e.target.value)}
-                  className="flex-1 sm:flex-none py-2 px-3 border border-gray-200 rounded-md text-[0.85rem] text-gray-600 bg-white outline-none shadow-sm"
-                >
-                  <option value="latest">{t.searchResults.latest}</option>
-                  <option value="recommended">{t.searchResults.recommended}</option>
-                  <option value="price-low">{t.searchResults.priceLowToHigh}</option>
-                  <option value="price-high">{t.searchResults.priceHighToLow}</option>
-                  <option value="rating">{t.searchResults.highestRated}</option>
-                </select>
-                <button 
-                  onClick={() => setIsFilterDrawerOpen(true)}
-                  className="md:hidden flex-1 flex items-center justify-center gap-2 py-2 px-4 bg-white border border-gray-200 rounded-md text-[0.85rem] font-medium text-navy shadow-sm"
-                >
-                  <Filter className="w-4 h-4 text-blue" />
-                  Filters
-                </button>
-              </div>
-            </div>
-
             <div className="flex flex-col gap-6">
               {paginatedClinics.length === 0 ? (
                 <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
