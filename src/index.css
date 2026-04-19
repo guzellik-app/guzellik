@@ -40,6 +40,10 @@
   .text-balance {
     text-wrap: balance;
   }
+
+  .footer-brand .text-black {
+    @apply text-white;
+  }
 }
 
 html {

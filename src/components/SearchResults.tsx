@@ -291,7 +291,7 @@ function SearchResultsContent() {
           </div>
         </div>
 
-        <div className="max-w-[1200px] mx-auto px-[5vw] py-8 flex flex-col md:flex-row gap-8">
+        <div className="max-w-[1200px] mx-auto px-[5vw] pt-4 pb-8 flex flex-col md:flex-row gap-8">
           {/* Mobile Filter Drawer Backdrop */}
           {isFilterDrawerOpen && (
             <div 
@@ -452,10 +452,56 @@ function SearchResultsContent() {
           </aside>
 
           {/* Results List */}
-          <div className="flex-1">
-            <div className="flex flex-col gap-6">
+          <div className="flex-1 min-w-0">
+            {/* Stories Section */}
+            <div className="mb-4 overflow-hidden">
+              <div className="flex gap-4 overflow-x-auto no-scrollbar pb-3 scroll-smooth px-1">
+                {[
+                  { name: 'Rhinoplasty', query: 'rhinoplasty' },
+                  { name: 'Hair Transplant', query: 'hair' },
+                  { name: 'Dental', query: 'dental' },
+                  { name: 'Facelift', query: 'facelift' },
+                  { name: 'Liposuction', query: 'lipo' },
+                  { name: 'Botox', query: 'botox' },
+                  { name: 'Breast', query: 'breast' },
+                  { name: 'Eyes', query: 'eye' },
+                  { name: 'BBL', query: 'bbl' },
+                  { name: 'Tummy Tuck', query: 'tummy' },
+                  { name: 'Gastric', query: 'gastric' },
+                  { name: 'Eye Color', query: 'color' },
+                  { name: 'Laser Eye', query: 'laser' },
+                  { name: 'Orthodontics', query: 'ortho' },
+                  { name: 'Skin Care', query: 'skin' },
+                  { name: 'Fillers', query: 'fillers' },
+                  { name: 'Anti-Aging', query: 'aging' },
+                  { name: 'CoolSculpting', query: 'cool' },
+                  { name: 'PRP', query: 'prp' },
+                  { name: 'Dentistry', query: 'dentist' },
+                ].map((story, i) => (
+                  <button 
+                    key={i} 
+                    onClick={() => setSearchQuery(story.query)}
+                    className="flex flex-col items-center shrink-0 w-20 md:w-24 group"
+                  >
+                    <div className="w-16 h-16 md:w-20 md:h-20 rounded-full p-0.5 border-2 border-blue-500 bg-white shadow-sm transition-transform group-active:scale-95 group-hover:scale-105">
+                      <img 
+                        src={`https://picsum.photos/seed/${story.query}${i}/200`} 
+                        alt={story.name} 
+                        className="w-full h-full rounded-full object-cover" 
+                        referrerPolicy="no-referrer"
+                      />
+                    </div>
+                    <span className="text-[0.6rem] md:text-[0.65rem] font-medium text-gray-700 mt-2 text-center truncate w-full group-hover:text-blue transition-colors px-1">
+                      {story.name}
+                    </span>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 md:gap-6 w-full">
               {paginatedClinics.length === 0 ? (
-                <div className="bg-white rounded-2xl border border-gray-200 p-10 text-center">
+                <div className="col-span-2 bg-white rounded-2xl border border-gray-200 p-10 text-center">
                   <div className="text-4xl mb-4">🔍</div>
                   <h3 className="text-lg font-semibold text-navy mb-2">{t.searchResults.noClinicsFound}</h3>
                   <p className="text-gray-500 text-[0.9rem]">{t.searchResults.tryAdjusting}</p>
@@ -465,58 +511,26 @@ function SearchResultsContent() {
                   {paginatedClinics.map(clinic => (
                     <div 
                       key={clinic.id} 
-                      className="bg-white rounded-2xl overflow-hidden border border-black transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-row relative group h-[3.6cm] md:h-[5cm] lg:h-[5.8cm]"
+                      className="bg-white rounded-2xl overflow-hidden border border-black transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col relative group"
                     >
                       <Link 
                         to={`/${lang === 'en' ? '' : lang + '/'}chatmt/${clinic.slug}`}
                         className="absolute inset-0 z-0"
                       />
-                      <div className="w-[110px] md:w-[160px] lg:w-[220px] h-full relative shrink-0">
+                      <div className="w-full aspect-[4/3] md:aspect-video relative overflow-hidden">
                         <img src={clinic.image} alt={clinic.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
-                        <div className="absolute top-1.5 left-1.5 sm:top-2.5 sm:left-2.5 bg-gradient-to-br from-gold to-[#a8842c] text-white text-[0.55rem] sm:text-[0.65rem] font-semibold tracking-wider uppercase px-1.5 sm:px-2 py-0.5 rounded-full shadow-sm">
-                          {t.clinics[clinic.badge as keyof typeof t.clinics] || clinic.type}
-                        </div>
-                        <button 
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                          }}
-                          className="absolute top-1.5 right-1.5 sm:top-2.5 sm:right-2.5 w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white border-none cursor-pointer flex items-center justify-center shadow-sm transition-transform hover:scale-110 text-gray-400 hover:text-red-500 z-10 relative"
-                        >
-                          <Heart className="w-3 h-3 sm:w-3.5 sm:h-3.5" />
-                        </button>
                       </div>
-                      <div className="p-3 md:p-5 lg:p-6 flex-1 flex flex-col justify-between relative z-10 pointer-events-none">
-                        <div>
-                          <Link 
-                            to={`/${lang === 'en' ? '' : lang + '/'}mt/${clinic.clinicSlug || clinic.slug}`}
-                            className="text-[0.65rem] md:text-[0.75rem] font-medium text-gray-900 hover:text-blue transition-colors pointer-events-auto flex items-center gap-1 mb-0.5 md:mb-1 w-fit"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            <span>@{clinic.clinicSlug || clinic.slug}</span>
-                            {clinic.isVerified && <VerifiedBadge className="w-3.5 h-3.5 md:w-4 md:h-4 shrink-0" />}
-                          </Link>
-                          <div className="text-[1rem] md:text-[1.2rem] lg:text-[1.35rem] font-semibold text-navy mb-1 md:mb-2 line-clamp-1">{clinic.name}</div>
-                          <div className="flex items-center gap-1.5 md:gap-2">
-                            <div className="flex text-gold">
-                              {[...Array(5)].map((_, i) => (
-                                <Star key={i} className={`w-3 h-3 md:w-4 md:h-4 ${i < Math.floor(clinic.rating) ? 'fill-gold' : 'fill-gray-200 text-gray-200'}`} />
-                              ))}
-                            </div>
-                            <div className="text-[0.8rem] md:text-[0.9rem] font-semibold text-gray-800">{clinic.rating.toFixed(1)}</div>
-                            <div className="text-[0.75rem] md:text-[0.85rem] text-gray-400">({clinic.reviews.toLocaleString()})</div>
-                          </div>
-                        </div>
-                        <div className="flex items-center justify-between pt-2 md:pt-4 border-t border-gray-100 mt-2 pointer-events-auto">
-                          <div className="text-[0.7rem] md:text-[0.85rem] text-gray-400 font-medium flex items-center gap-1 sm:gap-1.5">
-                            <MapPin className="w-2.5 h-2.5 md:w-3.5 md:h-3.5" /> 
-                            <span className="line-clamp-1">{clinic.city}{clinic.countryKey !== 'turkey' ? `, ${t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}` : ''}</span>
-                          </div>
-                          <div className="text-right shrink-0">
-                            {clinic.price > 0 && (
-                              <span className="text-[1rem] md:text-[1.2rem] lg:text-[1.4rem] font-bold text-navy">{clinic.price.toLocaleString()} €</span>
-                            )}
-                          </div>
+                      <div className="p-3 md:p-4 flex flex-col justify-start relative z-10 pointer-events-none">
+                        <Link 
+                          to={`/${lang === 'en' ? '' : lang + '/'}mt/${clinic.clinicSlug || clinic.slug}`}
+                          className="text-[0.6rem] md:text-[0.7rem] font-medium text-gray-900 hover:text-blue transition-colors pointer-events-auto flex items-center gap-1 mb-1 w-full"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <span className="truncate">@{clinic.clinicSlug || clinic.slug}</span>
+                          {clinic.isVerified && <VerifiedBadge className="w-3 h-3 md:w-3.5 md:h-3.5 shrink-0" />}
+                        </Link>
+                        <div className="text-[0.85rem] md:text-[1.05rem] lg:text-[1.15rem] font-semibold text-navy truncate w-full">
+                          {clinic.name}
                         </div>
                       </div>
                     </div>
@@ -524,7 +538,7 @@ function SearchResultsContent() {
                   
                   {/* Pagination Controls */}
                   {totalPages > 1 && (
-                    <div className="flex items-center justify-center gap-2 mt-8">
+                    <div className="col-span-2 flex items-center justify-center gap-2 mt-8">
                       <button
                         onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
                         disabled={currentPage === 1}

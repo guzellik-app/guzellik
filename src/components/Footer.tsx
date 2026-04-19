@@ -8,7 +8,7 @@ export function Footer() {
     <footer className="bg-navy px-[5vw] pt-[80px] pb-[40px] border-t border-white/5">
       <div className="max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr] gap-10 lg:gap-[60px] pb-[60px] border-b border-white/10">
         <div>
-          <div className="font-serif text-[1.4rem] font-semibold text-white tracking-wide" dangerouslySetInnerHTML={{ __html: t.brand.nameHtml }}>
+          <div className="footer-brand font-serif text-[1.4rem] font-semibold text-white tracking-wide" dangerouslySetInnerHTML={{ __html: t.brand.nameHtml }}>
           </div>
           <p className="text-[0.88rem] text-white/45 leading-[1.7] mt-4 mb-6">
             {t.footer.desc}

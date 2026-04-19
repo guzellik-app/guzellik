@@ -95,8 +95,8 @@ export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: strin
             {t.hero.subtitle}
           </p>
 
-          <h2 className="text-blue font-semibold text-[1.1rem] animate-fade-up mb-1" style={{ animationDelay: '0.45s' }}>
-            Güzellik App
+          <h2 className="font-semibold text-[1.1rem] animate-fade-up mb-1" style={{ animationDelay: '0.45s' }}>
+            <span className="text-blue">Güzellik</span> <span className="text-black">App</span>
           </h2>
           <h2 className="animate-fade-up mb-10" style={{ animationDelay: '0.5s' }}>
             <a 
