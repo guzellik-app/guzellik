@@ -24,6 +24,7 @@ import {
   AlertTriangle
 } from 'lucide-react';
 import { VerifiedBadge } from './VerifiedBadge';
+import { AITranslate } from './AITranslate';
 
 function ClinicProfileContent() {
   const { slug } = useParams();
@@ -203,7 +204,7 @@ function ClinicProfileContent() {
                       {clinic.isVerified && <VerifiedBadge className="w-5 h-5 sm:w-6 sm:h-6 shrink-0" />}
                     </div>
                     <h1 className="font-nunito text-2xl sm:text-4xl md:text-5xl font-medium text-navy mb-1.5 sm:mb-3 leading-[1.1] break-words tracking-tight">
-                      {clinic.name}
+                      <AITranslate>{clinic.name}</AITranslate>
                     </h1>
                     <div className="text-gray-500 text-[0.95rem] sm:text-[1.2rem] mb-4">{clinic.type}</div>
                     
@@ -240,7 +241,7 @@ function ClinicProfileContent() {
             <div className="max-w-2xl mb-4 sm:mb-6">
               <h2 className="text-lg sm:text-xl font-serif font-medium text-navy mb-2 sm:mb-3">{t.clinicProfile.about}</h2>
               <p className="text-gray-600 leading-relaxed text-[0.9rem] sm:text-[1rem]">
-                {clinic.description}
+                <AITranslate>{clinic.description}</AITranslate>
               </p>
             </div>
           </div>
@@ -337,7 +338,9 @@ function ClinicProfileContent() {
                           </div>
                           <div className="p-5 flex-1 flex flex-col justify-between">
                             <div>
-                              <div className="text-[1.15rem] font-semibold text-navy mb-2 leading-tight">{service.name}</div>
+                              <div className="text-[1.15rem] font-semibold text-navy mb-2 leading-tight">
+                                <AITranslate>{service.name}</AITranslate>
+                              </div>
                               <div className="flex flex-wrap gap-1.5 mb-4">
                                 {service.procedures.map((proc: string) => (
                                   <span key={proc} className="text-[0.72rem] font-medium text-blue bg-light-blue rounded-full px-2.5 py-1">
@@ -395,7 +398,9 @@ function ClinicProfileContent() {
                         </div>
                         <div>
                           <div className="text-[0.8rem] text-gray-400 uppercase tracking-wider font-bold mb-1">{t.clinicProfile.address}</div>
-                          <div className="text-[1rem] text-navy font-medium leading-relaxed">{clinic.contact.address}</div>
+                          <div className="text-[1rem] text-navy font-medium leading-relaxed">
+                            <AITranslate>{clinic.contact.address}</AITranslate>
+                          </div>
                         </div>
                       </div>
                       

@@ -34,6 +34,7 @@ import {
   ExternalLink
 } from 'lucide-react';
 import { VerifiedBadge } from './VerifiedBadge';
+import { AITranslate } from './AITranslate';
 import { useI18n, I18nProvider } from '../I18nContext';
 import { Language } from '../i18n';
 
@@ -1626,8 +1627,12 @@ function ServicesList() {
                     <img src={service.image} alt={service.name} className="w-16 h-16 object-cover rounded-md" referrerPolicy="no-referrer" />
                   </TableCell>
                   <TableCell>
-                    <div className="font-medium">{service.name}</div>
-                    <div className="text-xs text-muted-foreground mt-1">{service.features}</div>
+                    <div className="font-medium">
+                      <AITranslate>{service.name}</AITranslate>
+                    </div>
+                    <div className="text-xs text-muted-foreground mt-1">
+                      <AITranslate>{service.features}</AITranslate>
+                    </div>
                   </TableCell>
                   <TableCell>{service.category}</TableCell>
                   <TableCell className="font-medium">{service.price}</TableCell>
@@ -1881,11 +1886,11 @@ function RequestRow({ req, role }: { req: any, role: Role, key?: any }) {
         {role === 'admin' && <TableCell className="text-xs text-muted-foreground truncate max-w-[100px]">{req.clinic_id}</TableCell>}
         <TableCell>
           <a href={req.service_link} target="_blank" rel="noopener noreferrer" className="text-blue hover:underline" onClick={(e) => e.stopPropagation()}>
-            {req.service_name}
+            <AITranslate>{req.service_name}</AITranslate>
           </a>
         </TableCell>
         <TableCell className="max-w-[200px] truncate" title={req.message}>
-          {req.message}
+          <AITranslate>{req.message}</AITranslate>
         </TableCell>
         <TableCell>
           <div className="flex items-center gap-2">
@@ -1908,7 +1913,9 @@ function RequestRow({ req, role }: { req: any, role: Role, key?: any }) {
               <div className="flex justify-between items-start">
                 <div>
                   <h4 className="font-semibold text-lg mb-1">{t.dashboard.initialRequest}</h4>
-                  <p className="text-sm text-gray-700 bg-white p-4 rounded-lg border shadow-sm">{req.message}</p>
+                  <p className="text-sm text-gray-700 bg-white p-4 rounded-lg border shadow-sm">
+                    <AITranslate>{req.message}</AITranslate>
+                  </p>
                 </div>
                 {(role === 'clinic' || role === 'admin') && (
                   <div className="flex items-center gap-2">
@@ -1941,7 +1948,9 @@ function RequestRow({ req, role }: { req: any, role: Role, key?: any }) {
                       return (
                         <div key={msg.id || idx} className={`flex flex-col ${isMyMessage ? 'items-end' : 'items-start'}`}>
                           <div className={`max-w-[80%] p-3 rounded-lg ${isMyMessage ? 'bg-blue text-white rounded-tr-none' : 'bg-white border text-gray-800 rounded-tl-none'}`}>
-                            <p className="text-sm whitespace-pre-wrap">{msg.message}</p>
+                            <p className="text-sm whitespace-pre-wrap">
+                              <AITranslate>{msg.message}</AITranslate>
+                            </p>
                           </div>
                           <span className="text-xs text-gray-400 mt-1">
                             {new Date(msg.created_at).toLocaleString()} • {isPatientSender ? req.full_name : msg.sender_id === req.clinic_id ? 'Clinic' : 'Admin'}
@@ -2190,7 +2199,7 @@ function AdminClinicsList() {
                     <TableRow key={clinic.id}>
                       <TableCell className="font-medium">
                         <div className="flex items-center gap-2">
-                          {settings?.clinic_name || clinic.full_name || t.dashboard.unnamedClinic}
+                          <AITranslate>{settings?.clinic_name || clinic.full_name || t.dashboard.unnamedClinic}</AITranslate>
                           {isVerified && <VerifiedBadge className="w-4 h-4" />}
                         </div>
                       </TableCell>

@@ -7,6 +7,7 @@ import { BottomNav } from './BottomNav';
 import { I18nProvider, useI18n } from '../I18nContext';
 import { Language } from '../i18n';
 import { VerifiedBadge } from './VerifiedBadge';
+import { AITranslate } from './AITranslate';
 import { Search, MapPin, CreditCard, Heart, Star, Filter, ChevronDown, X, List } from 'lucide-react';
 import { MOCK_CLINICS } from '../data/clinics';
 
@@ -492,7 +493,7 @@ function SearchResultsContent() {
                       />
                     </div>
                     <span className="text-[0.6rem] md:text-[0.65rem] font-medium text-gray-700 mt-2 text-center truncate w-full group-hover:text-blue transition-colors px-1">
-                      {story.name}
+                      <AITranslate>{story.name}</AITranslate>
                     </span>
                   </button>
                 ))}
@@ -530,7 +531,7 @@ function SearchResultsContent() {
                           {clinic.isVerified && <VerifiedBadge className="w-3 h-3 md:w-3.5 md:h-3.5 shrink-0" />}
                         </Link>
                         <div className="text-[0.85rem] md:text-[1.05rem] lg:text-[1.15rem] font-semibold text-navy truncate w-full">
-                          {clinic.name}
+                          <AITranslate>{clinic.name}</AITranslate>
                         </div>
                       </div>
                     </div>

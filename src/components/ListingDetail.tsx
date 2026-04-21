@@ -22,6 +22,7 @@ import {
   Heart
 } from 'lucide-react';
 import { VerifiedBadge } from './VerifiedBadge';
+import { AITranslate } from './AITranslate';
 
 function ListingDetailContent() {
   const { slug } = useParams();
@@ -298,7 +299,7 @@ function ListingDetailContent() {
           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-10">
             <div className="flex flex-col gap-4">
               <h1 className="font-robot text-4xl md:text-5xl font-medium text-navy">
-                {clinic.name}
+                <AITranslate>{clinic.name}</AITranslate>
               </h1>
               {/* Procedures on mobile */}
               <div className="flex flex-wrap gap-2 md:hidden">
@@ -338,7 +339,7 @@ function ListingDetailContent() {
               {/* About */}
               <section>
                 <p className="text-gray-600 leading-relaxed text-[1.05rem]">
-                  {clinic.description}
+                  <AITranslate>{clinic.description}</AITranslate>
                 </p>
               </section>
 
@@ -349,7 +350,9 @@ function ListingDetailContent() {
                   {clinic.comprehensiveFeatures.map((feature, idx) => (
                     <div key={idx} className="flex items-start gap-3 bg-white p-4 rounded-2xl border border-gray-100 shadow-sm">
                       <ShieldCheck className="w-5 h-5 text-blue shrink-0 mt-0.5" />
-                      <span className="text-gray-700 text-[0.95rem]">{feature}</span>
+                      <span className="text-gray-700 text-[0.95rem]">
+                        <AITranslate>{feature}</AITranslate>
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -362,7 +365,9 @@ function ListingDetailContent() {
                   {clinic.services.map((service, idx) => (
                     <div key={idx} className="flex items-center gap-2 text-gray-600 bg-gray-50 px-4 py-2 rounded-lg border border-gray-200">
                       <CheckCircle className="w-4 h-4 text-green-500" />
-                      <span className="text-[0.9rem]">{service}</span>
+                      <span className="text-[0.9rem]">
+                        <AITranslate>{service}</AITranslate>
+                      </span>
                     </div>
                   ))}
                 </div>
@@ -733,7 +738,7 @@ function ListingDetailContent() {
                             </div>
                           </div>
                           <p className="text-gray-600 text-sm italic">
-                            "{review.comment}"
+                            "<AITranslate>{review.comment}</AITranslate>"
                           </p>
                         </div>
                       ))}
