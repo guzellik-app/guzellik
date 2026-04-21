@@ -198,7 +198,9 @@ export const translations = {
       clinikGuarantee: "Güzellik App Guarantee",
       guarantee1: "Verified medical licenses and certifications",
       guarantee2: "Best price guarantee for all procedures",
-      guarantee3: "24/7 dedicated patient support"
+      guarantee3: "24/7 dedicated patient support",
+      share: "Share",
+      linkCopied: "Link copied to clipboard!"
     },
     clinicProfile: {
       search: "Search",
@@ -638,7 +640,9 @@ export const translations = {
       clinikGuarantee: "Clinik Garantie",
       guarantee1: "Verifizierte medizinische Lizenzen und Zertifizierungen",
       guarantee2: "Bestpreisgarantie für alle Eingriffe",
-      guarantee3: "24/7 engagierte Patientenbetreuung"
+      guarantee3: "24/7 engagierte Patientenbetreuung",
+      share: "Teilen",
+      linkCopied: "Link in die Zwischenablage kopiert!"
     },
     clinicProfile: {
       search: "Suche",
@@ -1078,7 +1082,9 @@ export const translations = {
       clinikGuarantee: "Clinik Garantisi",
       guarantee1: "Doğrulanmış tıbbi lisanslar ve sertifikalar",
       guarantee2: "Tüm işlemler için en iyi fiyat garantisi",
-      guarantee3: "7/24 özel hasta desteği"
+      guarantee3: "7/24 özel hasta desteği",
+      share: "Paylaş",
+      linkCopied: "Bağlantı panoya kopyalandı!"
     },
     clinicProfile: {
       search: "Arama",

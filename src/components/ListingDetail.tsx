@@ -19,7 +19,8 @@ import {
   ChevronDown,
   ShieldCheck,
   Award,
-  Heart
+  Heart,
+  Send
 } from 'lucide-react';
 import { VerifiedBadge } from './VerifiedBadge';
 import { AITranslate } from './AITranslate';
@@ -31,6 +32,23 @@ function ListingDetailContent() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [activeImage, setActiveImage] = useState(0);
   const [sessionUser, setSessionUser] = useState<any>(null);
+
+  const handleShare = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: clinic?.name || 'Check this out!',
+          text: `Check out ${clinic?.name} on Güzellik App`,
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert(t.listingDetail.linkCopied || 'Link copied to clipboard!');
+      }
+    } catch (err) {
+      console.error('Error sharing:', err);
+    }
+  };
 
   const [allClinics, setAllClinics] = useState<any[]>(MOCK_CLINICS);
   const [loading, setLoading] = useState(true);
@@ -215,11 +233,11 @@ function ListingDetailContent() {
     <div className="min-h-screen bg-off-white font-sans selection:bg-blue/20 selection:text-navy flex flex-col">
       <Navbar onOpenModal={() => setIsModalOpen(true)} />
       
-      <main className="flex-grow pt-[80px] pb-24">
+      <main className="flex-grow pt-4 md:pt-[80px] pb-24">
         <div className="max-w-[1200px] mx-auto px-[5vw]">
           
           {/* Image Gallery */}
-          <div className="mb-6">
+          <div className="mb-1">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4 h-[400px] md:h-[500px]">
               <div className="md:col-span-3 h-full rounded-3xl overflow-hidden relative group">
                 <img 
@@ -228,7 +246,7 @@ function ListingDetailContent() {
                   className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                   referrerPolicy="no-referrer"
                 />
-                <button className="absolute top-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-600 hover:text-red-500 hover:bg-white transition-all shadow-sm">
+                <button className="absolute bottom-4 right-4 w-10 h-10 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center text-gray-600 hover:text-red-500 hover:bg-white transition-all shadow-sm z-10">
                   <Heart className="w-5 h-5" />
                 </button>
               </div>
@@ -253,39 +271,49 @@ function ListingDetailContent() {
           </div>
 
           {/* Info Bar (Location, Type, Reviews) */}
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[0.85rem] text-gray-500 mb-4">
-            <div className="flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-blue" />
-              <span>{clinic.city}{clinic.countryKey !== 'turkey' ? `, ${t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}` : ''}</span>
+          <div className="flex flex-nowrap items-center gap-x-2.5 sm:gap-x-4 text-[0.75rem] md:text-[0.85rem] text-gray-500 mb-1.5 overflow-x-auto no-scrollbar whitespace-nowrap scroll-smooth">
+            <div className="flex items-center gap-1.5 shrink-0">
+              <MapPin className="w-3 h-3 md:w-3.5 md:h-3.5 text-blue" />
+              <span className="truncate max-w-[100px] sm:max-w-none">{clinic.city}{clinic.countryKey !== 'turkey' ? `, ${t.hero.locations[clinic.countryKey as keyof typeof t.hero.locations]}` : ''}</span>
             </div>
 
-            <div className="w-px h-3 bg-gray-300 hidden sm:block"></div>
+            <div className="w-px h-3 bg-gray-300 shrink-0"></div>
 
-            <span className="bg-blue/10 text-blue text-[0.7rem] font-bold tracking-wider uppercase px-2 py-0.5 rounded-md">
+            <span className="bg-blue/10 text-blue text-[0.65rem] md:text-[0.7rem] font-bold tracking-wider uppercase px-2 py-0.5 rounded-md shrink-0">
               {clinic.type}
             </span>
 
-            <div className="w-px h-3 bg-gray-300 hidden sm:block"></div>
+            <div className="w-px h-3 bg-gray-300 shrink-0"></div>
 
-            <button 
-              onClick={() => {
-                setIsReviewsExpanded(true);
-                setTimeout(() => {
-                  document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' });
-                }, 100);
-              }}
-              className="flex items-center gap-1 text-gold font-semibold hover:opacity-80 transition-opacity"
-            >
-              <Star className="w-3.5 h-3.5 fill-gold" />
-              {averageRating.toFixed(1)} ({totalReviews} {t.listingDetail.reviews})
-            </button>
+            <div className="flex items-center gap-1.5 shrink-0">
+              <button 
+                onClick={() => {
+                  setIsReviewsExpanded(true);
+                  setTimeout(() => {
+                    document.getElementById('reviews-section')?.scrollIntoView({ behavior: 'smooth' });
+                  }, 100);
+                }}
+                className="flex items-center gap-1 text-gold font-semibold hover:opacity-80 transition-opacity"
+              >
+                <Star className="w-3 h-3 md:w-3.5 md:h-3.5 fill-gold shrink-0" />
+                {averageRating.toFixed(1)} ({totalReviews})
+              </button>
+              
+              <button 
+                onClick={handleShare}
+                className="p-1 text-gray-400 hover:text-blue transition-colors flex items-center justify-center"
+                title="Share"
+              >
+                <Send className="w-5 h-5 shrink-0" />
+              </button>
+            </div>
           </div>
 
           {/* Divider Line */}
-          <div className="h-px bg-gray-200 w-full mb-8"></div>
+          <div className="h-px bg-gray-200 w-full mb-2"></div>
 
           {/* @username and Verified Badge */}
-          <div className="flex items-center gap-1.5 mb-2 px-1">
+          <div className="flex items-center gap-1.5 mb-1 px-1">
             <Link 
               to={`/${lang === 'en' ? '' : lang + '/'}mt/${clinic.clinicSlug || clinic.slug}`}
               className="text-gray-900 font-bold text-[0.9rem] sm:text-[1rem] hover:text-blue transition-all"
@@ -527,35 +555,42 @@ function ListingDetailContent() {
 
           {/* Reviews Section */}
           <section id="reviews-section" className="mt-16 pt-16 border-t border-gray-200">
-            <button 
-              onClick={() => setIsReviewsExpanded(!isReviewsExpanded)}
-              className="w-full flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 text-left hover:opacity-80 transition-opacity group"
-            >
-              <div>
-                <div className="flex items-center gap-3 mb-2">
-                  <h2 className="text-3xl font-serif font-medium text-navy">{t.listingDetail.reviews}</h2>
-                  <ChevronDown className={`w-6 h-6 text-gray-400 transition-transform duration-300 ${isReviewsExpanded ? 'rotate-180' : ''}`} />
-                </div>
-                <div className="flex items-center gap-2 text-gold">
-                  <div className="flex">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className={`w-5 h-5 ${i < Math.floor(averageRating) ? 'fill-gold' : 'text-gray-300'}`} />
-                    ))}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+              <div className="flex items-center gap-3">
+                <button 
+                  onClick={() => setIsReviewsExpanded(!isReviewsExpanded)}
+                  className="flex flex-col text-left hover:opacity-80 transition-opacity group"
+                >
+                  <div className="flex items-center gap-3">
+                    <h2 className="text-3xl font-serif font-medium text-navy">{t.listingDetail.reviews}</h2>
+                    <ChevronDown className={`w-6 h-6 text-gray-400 transition-transform duration-300 ${isReviewsExpanded ? 'rotate-180' : ''}`} />
                   </div>
-                  <span className="font-bold text-lg">
-                    {averageRating.toFixed(1)}
+                  <div className="flex items-center gap-2 text-gold mt-1">
+                    <div className="flex">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className={`w-5 h-5 ${i < Math.floor(averageRating) ? 'fill-gold' : 'text-gray-300'}`} />
+                      ))}
+                    </div>
+                    <span className="font-bold text-lg">
+                      {averageRating.toFixed(1)}
+                    </span>
+                    <span className="text-gray-500">({totalReviews} {t.listingDetail.reviews})</span>
+                  </div>
+                </button>
+              </div>
+
+              <div className="flex items-center gap-4">
+                <div className="hidden md:block">
+                  <span 
+                    onClick={() => setIsReviewsExpanded(!isReviewsExpanded)}
+                    className="text-blue font-medium flex items-center gap-2 cursor-pointer hover:opacity-70"
+                  >
+                    {isReviewsExpanded ? 'Hide Reviews' : 'Show All Reviews'}
+                    <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isReviewsExpanded ? 'rotate-180' : ''}`} />
                   </span>
-                  <span className="text-gray-500">({totalReviews} {t.listingDetail.reviews})</span>
                 </div>
               </div>
-              
-              <div className="hidden md:block">
-                <span className="text-blue font-medium flex items-center gap-2">
-                  {isReviewsExpanded ? 'Hide Reviews' : 'Show All Reviews'}
-                  <ChevronDown className={`w-4 h-4 transition-transform duration-300 ${isReviewsExpanded ? 'rotate-180' : ''}`} />
-                </span>
-              </div>
-            </button>
+            </div>
 
             {isReviewsExpanded && (
               <div className="animate-fade-down">

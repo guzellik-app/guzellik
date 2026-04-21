@@ -93,26 +93,26 @@ export function BottomNav({ onOpenModal }: { onOpenModal?: () => void }) {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[92%] md:w-1/2 lg:w-[40%] max-w-2xl">
-      <div className="bg-white/85 backdrop-blur-xl border border-blue-300 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full p-1.5 flex items-center justify-around">
+      <div className="bg-white/85 backdrop-blur-xl border border-blue-300 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full p-1 flex items-center justify-around">
         <Link 
           to={getHomePath()} 
-          className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 ${isActive(getHomePath()) ? 'text-blue bg-blue/10' : 'text-gray-500 active:scale-95 hover:bg-gray-100/50'}`}
+          className={`flex items-center justify-center p-1.5 rounded-full transition-all duration-300 ${isActive(getHomePath()) ? 'text-blue bg-blue/10' : 'text-gray-500 active:scale-95 hover:bg-gray-100/50'}`}
         >
-          <Home className={`w-7 h-7 ${isActive(getHomePath()) ? 'fill-blue/20' : ''}`} />
+          <Home className={`w-6 h-6 ${isActive(getHomePath()) ? 'fill-blue/20' : ''}`} />
         </Link>
 
         <Link 
           to={getSearchPath()} 
-          className={`flex items-center justify-center p-2 rounded-full transition-all duration-300 ${isActive(getSearchPath()) ? 'text-blue bg-blue/10' : 'text-gray-500 active:scale-95 hover:bg-gray-100/50'}`}
+          className={`flex items-center justify-center p-1.5 rounded-full transition-all duration-300 ${isActive(getSearchPath()) ? 'text-blue bg-blue/10' : 'text-gray-500 active:scale-95 hover:bg-gray-100/50'}`}
         >
-          <Search className={`w-7 h-7 ${isActive(getSearchPath()) ? 'fill-blue/20' : ''}`} />
+          <Search className={`w-6 h-6 ${isActive(getSearchPath()) ? 'fill-blue/20' : ''}`} />
         </Link>
 
         <Sheet open={isMenuOpen} onOpenChange={setIsMenuOpen}>
           <SheetTrigger
             render={
-              <button className="flex items-center justify-center p-2 rounded-full text-gray-500 active:scale-95 hover:bg-gray-100/50 transition-all outline-none">
-                <Menu className="w-7 h-7" />
+              <button className="flex items-center justify-center p-1.5 rounded-full text-gray-500 active:scale-95 hover:bg-gray-100/50 transition-all outline-none">
+                <Menu className="w-6 h-6" />
               </button>
             }
           />
