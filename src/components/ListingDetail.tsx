@@ -233,7 +233,7 @@ function ListingDetailContent() {
     <div className="min-h-screen bg-off-white font-sans selection:bg-blue/20 selection:text-navy flex flex-col">
       <Navbar onOpenModal={() => setIsModalOpen(true)} />
       
-      <main className="flex-grow pt-4 md:pt-[80px] pb-24">
+      <main className="flex-grow pt-[80px] pb-24">
         <div className="max-w-[1200px] mx-auto px-[5vw]">
           
           {/* Image Gallery */}
@@ -285,7 +285,7 @@ function ListingDetailContent() {
 
             <div className="w-px h-3 bg-gray-300 shrink-0"></div>
 
-            <div className="flex items-center gap-1.5 shrink-0">
+            <div className="flex items-center gap-4 shrink-0">
               <button 
                 onClick={() => {
                   setIsReviewsExpanded(true);
@@ -301,7 +301,7 @@ function ListingDetailContent() {
               
               <button 
                 onClick={handleShare}
-                className="p-1 text-gray-400 hover:text-blue transition-colors flex items-center justify-center"
+                className="p-1 text-gray-400 hover:text-blue transition-colors flex items-center justify-center rotate-[15deg]"
                 title="Share"
               >
                 <Send className="w-5 h-5 shrink-0" />
