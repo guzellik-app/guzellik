@@ -93,7 +93,7 @@ export function BottomNav({ onOpenModal }: { onOpenModal?: () => void }) {
 
   return (
     <div className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 w-[92%] md:w-1/2 lg:w-[40%] max-w-2xl">
-      <div className="bg-white/85 backdrop-blur-xl border border-blue-300 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full p-1 flex items-center justify-around">
+      <div className="bg-white/85 backdrop-blur-xl border-2 border-blue-300 shadow-[0_8px_32px_rgba(0,0,0,0.12)] rounded-full p-1 flex items-center justify-around">
         <Link 
           to={getHomePath()} 
           className={`flex items-center justify-center p-1.5 rounded-full transition-all duration-300 ${isActive(getHomePath()) ? 'text-blue bg-blue/10' : 'text-gray-500 active:scale-95 hover:bg-gray-100/50'}`}
