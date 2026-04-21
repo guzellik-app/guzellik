@@ -2,11 +2,11 @@
 <img width="1200" height="475" alt="IDE" src="" />
 </div>
 
-# Run and deploy your AI Studio app
+# Run and deploy the Web app in your IDE
 
 This contains everything you need to run your app locally.
 
-View your app in your IDE
+View your web app in your IDE
 
 ## Run Locally
 
