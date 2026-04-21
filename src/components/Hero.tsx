@@ -5,7 +5,7 @@ import { useI18n } from '../I18nContext';
 export function Hero({ onSearch }: { onSearch: (searchParams: { procedure: string, location: string, query: string }) => void }) {
   const { t } = useI18n();
   const [procedure, setProcedure] = useState('');
-  const [location, setLocation] = useState('Istanbul');
+  const [location, setLocation] = useState('');
   const [query, setQuery] = useState('');
 
   const handleSearchClick = () => {

@@ -32,27 +32,7 @@ function SearchResultsContent() {
     if (location) {
       setSearchLocation(location);
     } else {
-      // Robust location detection with fallback and silent error handling
-      const detectLocation = async () => {
-        try {
-          const response = await fetch('https://ipapi.co/json/');
-          if (!response.ok) throw new Error('ipapi failed');
-          const data = await response.json();
-          if (data.city) {
-            setSearchLocation(data.city);
-          }
-        } catch (err) {
-          // If first service fails, try a fallback or just fail silently
-          try {
-            const fallbackRes = await fetch('https://api.ipify.org?format=json');
-            // This only gives IP, for city we'd need another call, 
-            // but usually failing silently is better than console errors.
-          } catch (e) {
-            // Silently fail to avoid console noise
-          }
-        }
-      };
-      detectLocation();
+      setSearchLocation('');
     }
     if (query) setSearchQuery(query);
   }, []);
@@ -514,11 +494,7 @@ function SearchResultsContent() {
                       key={clinic.id} 
                       className="bg-white rounded-2xl overflow-hidden border border-black transition-all duration-300 hover:-translate-y-1 hover:shadow-lg flex flex-col relative group"
                     >
-                      <Link 
-                        to={`/${lang === 'en' ? '' : lang + '/'}chatmt/${clinic.slug}`}
-                        className="absolute inset-0 z-0"
-                      />
-                      <div className="w-full aspect-[4/3] md:aspect-video relative overflow-hidden">
+                      <div className="w-full aspect-[4/3] md:aspect-video relative overflow-hidden pointer-events-none">
                         <img src={clinic.image} alt={clinic.name} className="w-full h-full object-cover" referrerPolicy="no-referrer" />
                       </div>
                       <div className="p-3 md:p-4 flex flex-col justify-start relative z-10 pointer-events-none">
@@ -530,10 +506,14 @@ function SearchResultsContent() {
                           <span className="truncate">@{clinic.clinicSlug || clinic.slug}</span>
                           {clinic.isVerified && <VerifiedBadge className="w-3 h-3 md:w-3.5 md:h-3.5 shrink-0" />}
                         </Link>
-                        <div className="text-[0.85rem] md:text-[1.05rem] lg:text-[1.15rem] font-semibold text-navy truncate w-full">
+                        <div className="text-[0.85rem] md:text-[1.05rem] lg:text-[1.15rem] font-semibold text-navy truncate w-full pointer-events-none">
                           <AITranslate>{clinic.name}</AITranslate>
                         </div>
                       </div>
+                      <Link 
+                        to={`/${lang === 'en' ? '' : lang + '/'}chatmt/${clinic.slug}`}
+                        className="absolute inset-0 z-[5]"
+                      />
                     </div>
                   ))}
                   
