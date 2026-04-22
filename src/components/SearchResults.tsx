@@ -238,9 +238,8 @@ function SearchResultsContent() {
       <main className="flex-grow pt-[60px] pb-24">
         {/* Sticky Search Box */}
         <div className="sticky top-[60px] z-40 bg-white border-b border-gray-200 shadow-sm py-4 px-[5vw]">
-          <div className="max-w-[1200px] mx-auto flex items-center gap-3 md:gap-8">
-            <div className="hidden md:block w-[280px] shrink-0" />
-            <div className="flex-1 flex items-center gap-3">
+          <div className="max-w-[1200px] mx-auto">
+            <div className="w-full lg:w-4/5 mx-auto flex items-center gap-3">
               <div className="flex-1 relative">
                 <input 
                   type="text"
@@ -260,48 +259,48 @@ function SearchResultsContent() {
                 )}
               </div>
               
-              {/* Filter Toggle for Mobile */}
+              {/* Filter Toggle */}
               <button 
                 onClick={() => setIsFilterDrawerOpen(true)}
-                className="md:hidden flex h-10 items-center justify-center gap-2 px-4 bg-off-white border-[1.5px] border-gray-200 rounded-2xl text-[0.85rem] font-medium text-navy transition-all active:scale-95"
+                className="flex h-10 items-center justify-center gap-2 px-4 bg-off-white border-[1.5px] border-gray-200 rounded-2xl text-[0.85rem] font-medium text-navy transition-all active:scale-95 whitespace-nowrap"
               >
                 <Filter className="w-4 h-4 text-blue" />
-                <span className="hidden xs:inline">Filters</span>
+                <span>Filters</span>
               </button>
             </div>
           </div>
         </div>
 
-        <div className="max-w-[1200px] mx-auto px-[5vw] pt-4 pb-8 flex flex-col md:flex-row gap-8">
-          {/* Mobile Filter Drawer Backdrop */}
+        <div className="max-w-[1200px] mx-auto px-[5vw] pt-4 pb-8">
+          {/* Filter Drawer Backdrop */}
           {isFilterDrawerOpen && (
             <div 
-              className="fixed inset-0 bg-black/50 z-[45] md:hidden"
+              className="fixed inset-0 bg-black/50 z-[45]"
               onClick={() => setIsFilterDrawerOpen(false)}
             />
           )}
 
-          {/* Filters Sidebar / Drawer */}
+          {/* Filters Drawer */}
           <aside className={`
-            fixed inset-y-0 left-0 z-[46] w-[280px] bg-white transform transition-transform duration-300 ease-in-out md:relative md:translate-x-0 md:z-auto md:bg-transparent
+            fixed inset-y-0 left-0 z-[46] w-[280px] bg-white transform transition-transform duration-300 ease-in-out
             ${isFilterDrawerOpen ? 'translate-x-0' : '-translate-x-full'}
-            md:block shrink-0
+            shrink-0
           `}
           style={{ 
-            top: isFilterDrawerOpen ? '0' : 'auto',
-            bottom: isFilterDrawerOpen ? '0' : 'auto',
-            height: isFilterDrawerOpen ? '100vh' : 'auto',
-            paddingTop: isFilterDrawerOpen ? '60px' : '0',
-            paddingBottom: isFilterDrawerOpen ? '100px' : '0'
+            top: '0',
+            bottom: '0',
+            height: '100vh',
+            paddingTop: '60px',
+            paddingBottom: '100px'
           }}>
-            <div className="h-full bg-white border-r border-gray-200 md:border md:rounded-2xl p-5 shadow-sm overflow-y-auto">
+            <div className="h-full bg-white border-r border-gray-200 p-5 shadow-sm overflow-y-auto">
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-100">
                 <div className="flex items-center gap-2 font-semibold text-navy">
                   <Filter className="w-4 h-4 text-blue" />
                   {t.searchResults.filters}
                 </div>
                 <button 
-                  className="md:hidden text-gray-400 hover:text-navy"
+                  className="text-gray-400 hover:text-navy"
                   onClick={() => setIsFilterDrawerOpen(false)}
                 >
                   <X className="w-5 h-5" />
@@ -433,7 +432,7 @@ function SearchResultsContent() {
           </aside>
 
           {/* Results List */}
-          <div className="flex-1 min-w-0">
+          <div className="w-full">
             {/* Stories Section */}
             <div className="mb-4 overflow-hidden">
               <div className="flex gap-4 overflow-x-auto no-scrollbar pb-3 scroll-smooth px-1">
@@ -480,9 +479,9 @@ function SearchResultsContent() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4 md:gap-6 w-full">
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6 w-full">
               {paginatedClinics.length === 0 ? (
-                <div className="col-span-2 bg-white rounded-2xl border border-gray-200 p-10 text-center">
+                <div className="col-span-full bg-white rounded-2xl border border-gray-200 p-10 text-center">
                   <div className="text-4xl mb-4">🔍</div>
                   <h3 className="text-lg font-semibold text-navy mb-2">{t.searchResults.noClinicsFound}</h3>
                   <p className="text-gray-500 text-[0.9rem]">{t.searchResults.tryAdjusting}</p>
